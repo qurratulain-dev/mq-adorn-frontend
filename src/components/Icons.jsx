@@ -32,3 +32,24 @@ export const CloseIcon = (p) => (
 export const SparkleIcon = (p) => (
   <svg {...base} {...p}><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" /></svg>
 )
+export const ChevronDownIcon = (p) => (
+  <svg {...base} width={14} height={14} {...p}><path d="M6 9l6 6 6-6" /></svg>
+)
+export const ChevronLeftIcon = (p) => (
+  <svg {...base} {...p}><path d="M15 6l-6 6 6 6" /></svg>
+)
+export const ChevronRightIcon = (p) => (
+  <svg {...base} {...p}><path d="M9 6l6 6-6 6" /></svg>
+)
+export const InstagramIcon = (p) => (
+  <svg {...base} width={18} height={18} {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
+  </svg>
+)
+export const TikTokIcon = (p) => (
+  <svg {...base} width={18} height={18} fill="currentColor" stroke="none" {...p}>
+    <path d="M14.6 4.2A4.4 4.4 0 0 1 12.7 2H10.2v11.2a2.15 2.15 0 1 1-1.85-2.13v-2.6a4.75 4.75 0 1 0 4.15 4.73V8.15a6.8 6.8 0 0 0 3.9 1.23V6.7a4.4 4.4 0 0 1-1.8-.5z" />
+  </svg>
+)

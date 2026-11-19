@@ -1,17 +1,25 @@
 import { Link } from 'react-router-dom'
 import Logo from './Logo.jsx'
+import { SOCIAL_LINKS } from './navLinks.js'
+import { InstagramIcon, TikTokIcon } from './Icons.jsx'
 
 const YEAR = new Date().getFullYear()
+
+const ICONS = {
+  tiktok: TikTokIcon,
+  instagram: InstagramIcon,
+}
 
 const COLUMNS = [
   {
     title: 'Shop',
     links: [
       ['New In', '/shop?sort=new'],
-      ['Rings', '/shop?category=rings'],
-      ['Necklaces', '/shop?category=necklaces'],
-      ['Earrings', '/shop?category=earrings'],
-      ['Dresses', '/dresses'],
+      ['Jewellery', '/shop?category=jewellery'],
+      ['Earrings', '/shop?category=jewellery&sub=earrings'],
+      ['Necklaces', '/shop?category=jewellery&sub=necklaces'],
+      ['Rings', '/shop?category=jewellery&sub=rings'],
+      ['Dresses', '/shop?category=dresses'],
       ['Sale', '/shop?sale=1'],
     ],
   },
@@ -44,6 +52,23 @@ export default function Footer() {
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
             Timeless jewellery and graceful dresses, crafted to make every moment shine. Delivered across Pakistan.
           </p>
+          <nav className="mt-5 flex items-center gap-3" aria-label="Social media">
+            {SOCIAL_LINKS.map(({ label, href, Icon }) => {
+              const Svg = ICONS[Icon]
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`MQ Adorn on ${label}`}
+                  className="text-white/70 transition hover:text-gold"
+                >
+                  <Svg width={20} height={20} />
+                </a>
+              )
+            })}
+          </nav>
           <form className="mt-6 flex max-w-sm" onSubmit={(e) => e.preventDefault()}>
             <input
               type="email"
