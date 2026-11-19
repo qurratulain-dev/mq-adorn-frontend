@@ -10,7 +10,7 @@ export default function AnnouncementBar() {
   return (
     <div className="bg-primary text-white">
       <div className="container-page grid grid-cols-[1fr_auto] items-center gap-3 py-2 sm:grid-cols-3">
-        <p className="min-w-0 truncate text-[10px] tracking-[0.18em] uppercase sm:col-start-2 sm:text-center sm:text-[11px] sm:tracking-[0.2em] md:text-xs">
+        <p className="min-w-0 text-[10px] leading-tight tracking-[0.12em] uppercase sm:col-start-2 sm:text-center sm:text-[11px] sm:leading-normal sm:tracking-[0.2em] sm:whitespace-nowrap md:text-xs">
           <span className="text-gold">✦</span> Free Shipping on Orders Above Rs. 5,000{' '}
           <span className="text-gold">✦</span>
         </p>
