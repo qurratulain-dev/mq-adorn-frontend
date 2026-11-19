@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { NAV_LINKS } from './navLinks.js'
@@ -190,7 +191,8 @@ export default function Header() {
         </div>
       )}
 
-      {/* Mobile drawer */}
+      {/* Portal the drawer to document.body so header backdrop-blur does not clip position:fixed. */}
+      {createPortal(
       <div className={`fixed inset-0 z-50 lg:hidden ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
         <div
           className={`absolute inset-0 bg-black/40 transition-opacity ${open ? 'opacity-100' : 'opacity-0'}`}
@@ -259,7 +261,7 @@ export default function Header() {
             </Link>
           </div>
         </aside>
-      </div>
+      </div>, document.body)}
     </header>
   )
 }
