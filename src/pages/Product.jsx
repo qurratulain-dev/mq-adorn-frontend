@@ -418,11 +418,14 @@ export default function Product() {
               rel="noopener noreferrer"
               className="btn-outline mt-3 w-full"
             >
-              <WhatsAppIcon width={18} height={18} /> Chat on WhatsApp · {WHATSAPP_DISPLAY}
+              <>
+                <WhatsAppIcon width={18} height={18} /> Chat on WhatsApp
+                <span className="hidden sm:inline"> · {WHATSAPP_DISPLAY}</span>
+              </>
             </a>
             <p className="mt-3 text-xs leading-relaxed text-muted">
-              Opens a free WhatsApp chat with this product name and link already filled in. Payment is by JazzCash,
-              Easypaisa or bank transfer only — no cash on delivery.
+              WhatsApp {WHATSAPP_DISPLAY}. Opens a free chat with this product name and link already filled in.
+              Payment is by JazzCash, Easypaisa or bank transfer only — no cash on delivery.
             </p>
 
             <div className="mt-8">
