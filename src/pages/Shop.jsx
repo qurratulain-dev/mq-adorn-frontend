@@ -435,7 +435,7 @@ export default function Shop() {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-5 pb-8">
-              <ShopFilters values={values} onChange={update} onClear={clearFilters} />
+              <ShopFilters values={values} onChange={update} onClear={clearFilters} showHeading={false} />
             </div>
             <div className="border-t border-black/10 px-5 py-4">
               <button type="button" className="btn-primary w-full" onClick={() => setFiltersOpen(false)}>

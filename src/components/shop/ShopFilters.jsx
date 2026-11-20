@@ -23,7 +23,7 @@ function CheckRow({ checked, onChange, children }) {
   )
 }
 
-export default function ShopFilters({ values, onChange, onClear }) {
+export default function ShopFilters({ values, onChange, onClear, showHeading = true }) {
   const subs = SUB_LINKS[values.category] || []
   const rangeId = currentPriceRangeId(values)
   const hasFilters = Boolean(
@@ -32,14 +32,16 @@ export default function ShopFilters({ values, onChange, onClear }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="font-heading text-xl font-medium">Filters</h2>
-        {hasFilters && (
-          <button type="button" className="text-xs font-medium tracking-wide text-muted uppercase hover:text-gold" onClick={onClear}>
-            Clear all
-          </button>
-        )}
-      </div>
+      {showHeading || hasFilters ? (
+        <div className="flex items-center justify-between gap-3">
+          {showHeading && <h2 className="font-heading text-xl font-medium">Filters</h2>}
+          {hasFilters && (
+            <button type="button" className="text-xs font-medium tracking-wide text-muted uppercase hover:text-gold" onClick={onClear}>
+              Clear all
+            </button>
+          )}
+        </div>
+      ) : null}
 
       <Section title="Category">
         {subs.map((link) => {

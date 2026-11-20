@@ -105,7 +105,7 @@ export default function SearchPanel({ open, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`absolute inset-x-0 top-0 flex h-full flex-col overflow-hidden bg-cream shadow-[0_24px_60px_-28px_rgba(26,26,26,0.55)] transition-all duration-300 ease-out motion-reduce:transition-none sm:h-auto sm:max-h-[min(42rem,88vh)] ${
+        className={`absolute inset-x-0 top-0 flex h-full flex-col overflow-hidden bg-cream shadow-[0_24px_60px_-28px_rgba(26,26,26,0.55)] transition-all duration-300 ease-out motion-reduce:transition-none sm:h-auto sm:max-h-[min(52rem,94vh)] ${
           open ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-6 opacity-0'
         }`}
       >
@@ -202,18 +202,23 @@ export default function SearchPanel({ open, onClose }) {
                 </ul>
               )}
 
-              {(status === 'ready' || status === 'loading') && (
-                <Link
-                  to={`/shop?q=${encodeURIComponent(debounced)}`}
-                  onClick={onClose}
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-gold"
-                >
-                  View all results <ArrowRightIcon />
-                </Link>
-              )}
             </div>
           )}
         </div>
+
+        {showSuggestions && (status === 'ready' || status === 'loading') && (
+          <div className="border-t border-black/10 bg-cream">
+            <div className="container-page py-3">
+              <Link
+                to={`/shop?q=${encodeURIComponent(debounced)}`}
+                onClick={onClose}
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-gold"
+              >
+                View all results <ArrowRightIcon />
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>,
     document.body,
