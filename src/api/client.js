@@ -31,4 +31,4 @@ export const getProducts = (params = {}, options = {}) => {
   const query = search.toString()
   return apiFetch(`/products${query ? `?${query}` : ''}`, options)
 }
-export const getProduct = (slug) => apiFetch(`/products/${slug}`)
+export const getProduct = (slug, options = {}) => apiFetch(`/products/${slug}`, options)

@@ -32,23 +32,31 @@ export function CartProvider({ children }) {
       wishlist,
       setWishlist,
       cartCount: items.reduce((sum, item) => sum + (item.quantity || 1), 0),
-      addToCart: (product) => {
+      addToCart: (product, options = {}) => {
+        const quantity = Math.max(1, Number(options.quantity) || 1)
+        const color = options.color || null
+        const size = options.size || null
+        const sameLine = (item) =>
+          item.slug === product.slug && (item.color || null) === color && (item.size || null) === size
+
         setItems((current) => {
-          const index = current.findIndex((item) => item.slug === product.slug)
+          const index = current.findIndex(sameLine)
           if (index === -1) {
             return [
               ...current,
               {
                 slug: product.slug,
                 name: product.name,
-                price: product.sale_price || product.price,
+                price: options.price || product.sale_price || product.price,
                 image: product.images?.[0],
-                quantity: 1,
+                quantity,
+                color,
+                size,
               },
             ]
           }
           return current.map((item, i) =>
-            i === index ? { ...item, quantity: (item.quantity || 1) + 1 } : item,
+            i === index ? { ...item, quantity: (item.quantity || 1) + quantity } : item,
           )
         })
       },

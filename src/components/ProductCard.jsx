@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
       <div className="relative aspect-square overflow-hidden bg-cream">
         <Link to={`/product/${product.slug}`} className="block h-full w-full">
           {image ? (
-            <img src={image} alt={product.name} className="img-zoom h-full w-full object-contain p-3" />
+            <img src={image} alt={product.name} className="img-zoom h-full w-full object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center text-xs text-muted">No image</div>
           )}
