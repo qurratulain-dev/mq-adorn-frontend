@@ -1,14 +1,37 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BagIcon, HeartIcon } from './Icons.jsx'
+import QuickAdd from './product/QuickAdd.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs, salePercent } from '../lib/format.js'
+import { addToCartStrategy, lineFromVariant } from '../lib/product.js'
 
 export default function ProductCard({ product }) {
   const { addToCart, toggleWishlist, isWishlisted } = useCart()
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [notice, setNotice] = useState('')
   const image = product.images?.[0]
   const onSale = Boolean(product.sale_price)
   const percent = salePercent(product.price, product.sale_price)
   const loved = isWishlisted(product.slug)
+
+  const onAdd = () => {
+    const strategy = addToCartStrategy(product)
+    setNotice('')
+    if (strategy.type === 'oos') {
+      setNotice('This item is currently out of stock.')
+      return
+    }
+    if (strategy.type === 'single') {
+      addToCart(product, lineFromVariant(product, strategy.variant))
+      return
+    }
+    if (strategy.type === 'picker') {
+      setPickerOpen(true)
+      return
+    }
+    addToCart(product)
+  }
 
   return (
     <article className="card-lift flex h-full flex-col bg-card p-3 shadow-[0_10px_30px_-22px_rgba(26,26,26,0.45)] sm:p-4">
@@ -49,10 +72,12 @@ export default function ProductCard({ product }) {
             <span className="font-medium">{formatRs(product.price)}</span>
           )}
         </p>
-        <button type="button" className="btn-primary mt-3 w-full px-4 py-2.5 text-xs" onClick={() => addToCart(product)}>
+        <button type="button" className="btn-primary mt-3 w-full px-4 py-2.5 text-xs" onClick={onAdd}>
           <BagIcon width={16} height={16} /> Add to Cart
         </button>
+        {notice && <p className="mt-2 text-xs text-sale">{notice}</p>}
       </div>
+      <QuickAdd product={product} open={pickerOpen} onClose={() => setPickerOpen(false)} />
     </article>
   )
 }

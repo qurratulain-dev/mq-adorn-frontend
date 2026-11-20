@@ -22,6 +22,14 @@ const EMPTY = {
   payment_reference: '',
 }
 
+function lineError(errors, index) {
+  const keys = [`items.${index}`, `items.${index}.slug`, `items.${index}.quantity`, `items.${index}.color`, `items.${index}.size`]
+  for (const key of keys) {
+    if (errors?.[key]) return Array.isArray(errors[key]) ? errors[key][0] : errors[key]
+  }
+  return ''
+}
+
 function firstError(errors) {
   if (!errors) return ''
   if (typeof errors === 'string') return errors
@@ -310,8 +318,11 @@ export default function Checkout() {
         <aside className="border border-black/5 bg-card p-5 sm:p-6 lg:sticky lg:top-28">
           <h2 className="font-heading text-xl">Your order</h2>
           <div className="mt-2 divide-y divide-black/5">
-            {items.map((item) => (
-              <CartItem key={`${item.slug}-${item.color}-${item.size}`} item={item} compact />
+            {items.map((item, index) => (
+              <div key={`${item.slug}-${item.color}-${item.size}`}>
+                <CartItem item={item} compact />
+                {lineError(errors, index) && <p className="pb-3 text-xs text-sale">{lineError(errors, index)}</p>}
+              </div>
             ))}
           </div>
           {remaining > 0 ? (

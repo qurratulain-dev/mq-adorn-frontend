@@ -52,3 +52,26 @@ const COLOR_HEX = {
 export function colorHex(name) {
   return COLOR_HEX[name] || null
 }
+
+export function inStockVariants(product) {
+  return (product?.variants || []).filter((item) => Number(item.stock) > 0)
+}
+
+/** How a product card should add this item so checkout never gets an incomplete line. */
+export function addToCartStrategy(product) {
+  const variants = product?.variants || []
+  if (variants.length === 0) return { type: 'direct' }
+
+  const inStock = inStockVariants(product)
+  if (inStock.length === 0) return { type: 'oos' }
+  if (inStock.length === 1) return { type: 'single', variant: inStock[0] }
+  return { type: 'picker', variants: inStock }
+}
+
+export function lineFromVariant(product, variant) {
+  return {
+    color: variant?.color || null,
+    size: variant?.size || null,
+    price: variant?.price || product.sale_price || product.price,
+  }
+}
