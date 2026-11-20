@@ -5,6 +5,7 @@ import Logo from './Logo.jsx'
 import { NAV_LINKS } from './navLinks.js'
 import { BagIcon, ChevronDownIcon, CloseIcon, HeartIcon, MenuIcon, SearchIcon, UserIcon } from './Icons.jsx'
 import { useCart } from '../context/CartContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import SearchPanel from './SearchPanel.jsx'
 
 function IconButton({ label, to, onClick, children, badge }) {
@@ -144,6 +145,8 @@ export default function Header() {
   const setOpen = (value) => setMenuKey(value ? location.key : null)
   const toggleSearch = () => setSearchKey(searchOpen ? null : location.key)
   const { cartCount, wishlist, toggleCart } = useCart()
+  const { isLoggedIn } = useAuth()
+  const accountTo = isLoggedIn ? '/account' : '/login'
 
   const icons = (
     <div className="flex items-center gap-0.5 sm:gap-1">
@@ -156,7 +159,7 @@ export default function Header() {
         <SearchIcon />
       </button>
       <span className="hidden sm:inline-flex">
-        <IconButton label="Account" to="/account">
+        <IconButton label="Account" to={accountTo}>
           <UserIcon />
         </IconButton>
       </span>
@@ -279,8 +282,8 @@ export default function Header() {
               })}
             </ul>
             <div className="border-t border-black/10 px-5 py-4">
-              <Link to="/account" className="flex items-center gap-3 text-sm font-medium">
-                <UserIcon /> Login / Register
+              <Link to={accountTo} className="flex items-center gap-3 text-sm font-medium">
+                <UserIcon /> {isLoggedIn ? 'My account' : 'Login / Register'}
               </Link>
             </div>
           </aside>

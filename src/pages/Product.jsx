@@ -141,6 +141,8 @@ export default function Product() {
   const [status, setStatus] = useState('loading')
   const [product, setProduct] = useState(null)
   const [related, setRelated] = useState([])
+  const [reviews, setReviews] = useState([])
+  const [rating, setRating] = useState({ average: null, count: 0 })
   const [color, setColor] = useState('')
   const [size, setSize] = useState('')
   const [quantity, setQuantity] = useState(1)
@@ -163,6 +165,8 @@ export default function Product() {
         const selection = firstAvailableSelection(item.variants)
         setProduct(item)
         setRelated(Array.isArray(payload.related) ? payload.related : [])
+        setReviews(Array.isArray(payload.reviews) ? payload.reviews : [])
+        setRating(payload.rating || { average: null, count: 0 })
         setColor(selection.color)
         setSize(selection.size)
         setQuantity(1)
@@ -438,10 +442,28 @@ export default function Product() {
           <h2 id="reviews-heading" className="font-heading text-2xl font-medium sm:text-3xl">
             Reviews
           </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-            Approved customer reviews will appear here once orders can be completed and reviewed. There are no public
-            reviews for this piece yet.
-          </p>
+          {rating.count > 0 && (
+            <p className="mt-2 text-sm text-muted">
+              Average {rating.average} / 5 from {rating.count} {rating.count === 1 ? 'review' : 'reviews'}
+            </p>
+          )}
+          {reviews.length === 0 ? (
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+              There are no public reviews for this piece yet. Reviews appear here after an order is delivered and the
+              review is approved.
+            </p>
+          ) : (
+            <ul className="mt-6 max-w-2xl space-y-5">
+              {reviews.map((review, index) => (
+                <li key={`${review.customer_name}-${index}`} className="border-b border-black/5 pb-5">
+                  <p className="text-sm font-medium">
+                    {review.customer_name} <span className="font-normal text-muted">· {review.rating} / 5</span>
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-muted">{review.comment}</p>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         {related.length > 0 && (

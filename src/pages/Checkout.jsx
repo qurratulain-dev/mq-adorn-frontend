@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { createOrder } from '../api/client.js'
 import CartItem from '../components/cart/CartItem.jsx'
 import { ACCEPTED_PROOF_EXTENSIONS, ACCEPTED_PROOF_TYPES, MAX_PROOF_BYTES, PAYMENT_METHODS, paymentMethodById } from '../config/payment.js'
 import { FREE_SHIPPING_THRESHOLD, remainingForFreeShipping } from '../config/shipping.js'
+import { useAuth } from '../context/AuthContext.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs } from '../lib/format.js'
 import { isPakistaniPhone } from '../lib/phone.js'
@@ -40,6 +41,7 @@ function firstError(errors) {
 export default function Checkout() {
   const navigate = useNavigate()
   const { items, subtotal, shippingFee, total, clearCart } = useCart()
+  const { user } = useAuth()
   const [form, setForm] = useState(EMPTY)
   const [proof, setProof] = useState(null)
   const [preview, setPreview] = useState('')
@@ -47,6 +49,17 @@ export default function Checkout() {
   const [submitting, setSubmitting] = useState(false)
   const [formError, setFormError] = useState('')
   const [complete, setComplete] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    setForm((current) => ({
+      ...current,
+      customer_name: current.customer_name || user.name || '',
+      customer_email: current.customer_email || user.email || '',
+      customer_phone: current.customer_phone || user.phone || '',
+    }))
+  }, [user])
+
 
   const method = paymentMethodById(form.payment_method)
   const remaining = remainingForFreeShipping(subtotal)
@@ -179,7 +192,7 @@ export default function Checkout() {
     <div className="bg-cream">
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
-          <p className="text-xs tracking-[0.22em] text-muted uppercase">Guest checkout</p>
+          <p className="text-xs tracking-[0.22em] text-muted uppercase">{user ? 'Checkout' : 'Guest checkout'}</p>
           <h1 className="mt-2 font-heading text-3xl font-medium sm:text-4xl">Checkout</h1>
           <p className="mt-2 max-w-xl text-sm text-muted">
             No account is needed. We only accept JazzCash, Easypaisa or bank transfer — we do not offer Cash on Delivery.
