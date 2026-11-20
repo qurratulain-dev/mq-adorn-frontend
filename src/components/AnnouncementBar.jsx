@@ -19,14 +19,14 @@ export default function AnnouncementBar() {
         </p>
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           <nav className="hidden items-center gap-2 text-white/85 sm:flex" aria-label="Quick links">
-            <Link to="/track-order" className="transition hover:text-gold">
+            <Link to="/account" className="transition hover:text-gold">
               Track Order
             </Link>
             <span className="text-white/40" aria-hidden="true">
               |
             </span>
             <Link to="/faqs" className="transition hover:text-gold">
-              Help Center
+              FAQs
             </Link>
           </nav>
           <nav className="flex items-center gap-2" aria-label="Social media">

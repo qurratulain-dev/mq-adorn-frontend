@@ -43,7 +43,10 @@ export default function CartSummary({ onNavigate, checkoutTo = '/checkout' }) {
       </Link>
       <p className="mt-3 text-[11px] leading-relaxed text-muted">
         Payment is by JazzCash, Easypaisa or bank transfer only. We do not offer Cash on Delivery. Shipping is calculated
-        again when you place the order.
+        again when you place the order. All sales are final — no returns, refunds or exchanges.{' '}
+        <Link to="/return-policy" onClick={go} className="underline decoration-gold underline-offset-2 hover:text-gold">
+          Return Policy
+        </Link>
       </p>
     </div>
   )

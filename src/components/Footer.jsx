@@ -29,15 +29,15 @@ const COLUMNS = [
     links: [
       ['Contact Us', '/contact'],
       ['FAQs', '/faqs'],
-      ['Shipping Policy', '/shipping'],
-      ['Return & Exchange', '/returns'],
-      ['Track Order', '/track-order'],
+      ['Shipping', '/shipping'],
+      ['Return Policy', '/return-policy'],
+      ['Track Order', '/account'],
     ],
   },
   {
     title: 'About',
     links: [
-      ['Our Story', '/about'],
+      ['About', '/about'],
       ['Privacy Policy', '/privacy'],
       ['Terms & Conditions', '/terms'],
     ],

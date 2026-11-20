@@ -10,6 +10,7 @@ import { formatRs, salePercent } from '../lib/format.js'
 import { availableStock, colorHex, firstAvailableSelection, findVariant, uniqueValues } from '../lib/product.js'
 import { shopPath } from '../lib/shopParams.js'
 import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
+import { DELIVERY_COPY, NO_RETURNS_INTRO, NO_RETURNS_ADVICE } from '../content/policies.js'
 
 const DETAIL_SECTIONS = (product) => {
   const isDress = product.type === 'dress'
@@ -29,7 +30,15 @@ const DETAIL_SECTIONS = (product) => {
     {
       id: 'delivery',
       title: 'Delivery & returns',
-      body: 'We deliver across Pakistan. Dummy delivery window: 3–7 working days in major cities, a little longer for remote areas. Unused items in their original condition may be returned or exchanged within 7 days — this policy will be confirmed on the Returns page.',
+      body: (
+        <>
+          {DELIVERY_COPY} {NO_RETURNS_INTRO} {NO_RETURNS_ADVICE}{' '}
+          <Link to="/return-policy" className="underline decoration-gold underline-offset-2 hover:text-gold">
+            Read the Return Policy
+          </Link>
+          .
+        </>
+      ),
     },
     {
       id: 'payment',

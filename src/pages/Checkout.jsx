@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs } from '../lib/format.js'
 import { isPakistaniPhone } from '../lib/phone.js'
+import { NO_RETURNS_CHECKBOX, NO_RETURNS_SHORT } from '../content/policies.js'
 import { isMobileDevice, orderPlacedHref } from '../lib/whatsapp.js'
 
 const CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Peshawar', 'Quetta', 'Multan', 'Hyderabad', 'Sialkot']
@@ -49,6 +50,7 @@ export default function Checkout() {
   const [submitting, setSubmitting] = useState(false)
   const [formError, setFormError] = useState('')
   const [complete, setComplete] = useState(false)
+  const [agreed, setAgreed] = useState(false)
 
   useEffect(() => {
     if (!user) return
@@ -110,6 +112,7 @@ export default function Checkout() {
     if (!form.shipping_address.trim()) next.shipping_address = 'Please enter your full delivery address.'
     if (!form.payment_method) next.payment_method = 'Please choose a payment method.'
     if (!proof) next.proof = 'Please upload a screenshot of your payment (JPG, PNG or WebP, up to 5MB).'
+    if (!agreed) next.final_sale = 'Please confirm that you understand all sales are final — no returns, refunds or exchanges.'
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -363,7 +366,31 @@ export default function Checkout() {
               Paying with {method.label}. Account details are placeholders until the real numbers are added.
             </p>
           )}
-          <button type="submit" className="btn-primary mt-5 w-full" disabled={submitting}>
+          <label className="mt-5 flex items-start gap-3 text-sm leading-relaxed">
+            <input
+              type="checkbox"
+              className="mt-1 accent-[#D4AF37]"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked)
+                setErrors((current) => {
+                  if (!current.final_sale) return current
+                  const next = { ...current }
+                  delete next.final_sale
+                  return next
+                })
+              }}
+            />
+            <span>
+              {NO_RETURNS_CHECKBOX}{' '}
+              <Link to="/return-policy" className="underline decoration-gold underline-offset-2 hover:text-gold">
+                Return Policy
+              </Link>
+            </span>
+          </label>
+          {errors.final_sale && <p className="mt-2 text-xs text-sale">{errors.final_sale}</p>}
+          <p className="mt-3 text-[11px] text-muted">{NO_RETURNS_SHORT}</p>
+          <button type="submit" className="btn-primary mt-4 w-full" disabled={submitting}>
             {submitting ? 'Placing order…' : 'Place order'}
           </button>
           <Link to="/cart" className="mt-3 block text-center text-sm hover:text-gold">

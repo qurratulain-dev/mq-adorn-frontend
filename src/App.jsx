@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout.jsx'
 import Home from './pages/Home.jsx'
 import Shop from './pages/Shop.jsx'
@@ -12,6 +12,11 @@ import Account from './pages/Account.jsx'
 import AccountOrder from './pages/AccountOrder.jsx'
 import Dresses from './pages/Dresses.jsx'
 import NotFound from './pages/NotFound.jsx'
+import About from './pages/About.jsx'
+import Faqs from './pages/Faqs.jsx'
+import ReturnPolicy from './pages/ReturnPolicy.jsx'
+import Shipping from './pages/Shipping.jsx'
+import Contact from './pages/Contact.jsx'
 
 export default function App() {
   return (
@@ -28,6 +33,13 @@ export default function App() {
         <Route path="account" element={<Account />} />
         <Route path="account/orders/:orderNumber" element={<AccountOrder />} />
         <Route path="dresses" element={<Dresses />} />
+        <Route path="about" element={<About />} />
+        <Route path="faqs" element={<Faqs />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="return-policy" element={<ReturnPolicy />} />
+        <Route path="shipping" element={<Shipping />} />
+        <Route path="returns" element={<Navigate to="/return-policy" replace />} />
+        <Route path="track-order" element={<Navigate to="/account" replace />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
