@@ -18,3 +18,19 @@ export function whatsappHref(details = {}) {
   if (url) lines.push(url)
   return `${WHATSAPP_LINK}?text=${encodeURIComponent(lines.join('\n'))}`
 }
+
+export const ORDER_PLACED_MESSAGE = (orderNumber) =>
+  `Hello MQ Adorn, I have placed order ${orderNumber}. My payment is pending verification.`
+
+export function orderPlacedMessage(orderNumber) {
+  return ORDER_PLACED_MESSAGE(orderNumber)
+}
+
+export function orderPlacedHref(orderNumber) {
+  return whatsappHref({ message: orderPlacedMessage(orderNumber) })
+}
+
+export function isMobileDevice() {
+  if (typeof navigator === 'undefined') return false
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}

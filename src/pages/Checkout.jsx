@@ -7,6 +7,7 @@ import { FREE_SHIPPING_THRESHOLD, remainingForFreeShipping } from '../config/shi
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs } from '../lib/format.js'
 import { isPakistaniPhone } from '../lib/phone.js'
+import { isMobileDevice, orderPlacedHref } from '../lib/whatsapp.js'
 
 const CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Peshawar', 'Quetta', 'Multan', 'Hyderabad', 'Sialkot']
 
@@ -96,6 +97,15 @@ export default function Checkout() {
     event.preventDefault()
     setFormError('')
     if (!validate()) return
+
+    // Open the tab now, while we still have the user click. After the API
+    // call, popup blockers will refuse window.open.
+    const mobile = isMobileDevice()
+    let waWindow = null
+    if (!mobile) {
+      waWindow = window.open('about:blank', 'mq-adorn-whatsapp')
+    }
+
     setSubmitting(true)
     try {
       const data = new FormData()
@@ -127,8 +137,16 @@ export default function Checkout() {
       }
       setComplete(true)
       clearCart()
-      navigate(`/order-success/${number}`, { replace: true })
+      const href = orderPlacedHref(number)
+      if (mobile || !waWindow || waWindow.closed) {
+        if (waWindow && !waWindow.closed) waWindow.close()
+        navigate(`/order-success/${number}`, { replace: true, state: { openWhatsApp: true } })
+      } else {
+        waWindow.location = href
+        navigate(`/order-success/${number}`, { replace: true })
+      }
     } catch (error) {
+      if (waWindow && !waWindow.closed) waWindow.close()
       const apiErrors = error.errors || {}
       setErrors(apiErrors)
       setFormError(firstError(apiErrors) || error.message || 'We could not place your order. Please try again in a moment.')

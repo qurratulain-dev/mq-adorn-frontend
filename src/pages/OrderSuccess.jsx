@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { getOrder } from '../api/client.js'
 import { WhatsAppIcon } from '../components/Icons.jsx'
 import { formatRs } from '../lib/format.js'
-import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
+import { WHATSAPP_DISPLAY, orderPlacedHref } from '../lib/whatsapp.js'
 
 export default function OrderSuccess() {
   const { orderNumber } = useParams()
@@ -24,6 +24,9 @@ export default function OrderSuccess() {
     return () => controller.abort()
   }, [orderNumber])
 
+  const location = useLocation()
+  const whatsappUrl = orderPlacedHref(orderNumber)
+
   useEffect(() => {
     document.title = `Order ${orderNumber} | MQ Adorn`
     return () => {
@@ -31,8 +34,15 @@ export default function OrderSuccess() {
     }
   }, [orderNumber])
 
+  useEffect(() => {
+    if (!location.state?.openWhatsApp || !orderNumber) return undefined
+    const timer = window.setTimeout(() => {
+      window.location.assign(orderPlacedHref(orderNumber))
+    }, 300)
+    return () => window.clearTimeout(timer)
+  }, [location.state, orderNumber])
+
   const label = order?.status_label || 'Payment verification pending'
-  const message = `Hello MQ Adorn, I have placed order ${orderNumber}. My payment is pending verification.`
 
   if (status === 'notfound') {
     return (
@@ -65,7 +75,7 @@ export default function OrderSuccess() {
             </p>
           )}
           <a
-            href={whatsappHref({ message })}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary mt-8 inline-flex"
