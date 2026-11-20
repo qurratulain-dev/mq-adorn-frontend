@@ -4,6 +4,7 @@ import AnnouncementBar from '../components/AnnouncementBar.jsx'
 import Header from '../components/Header.jsx'
 import Footer from '../components/Footer.jsx'
 import WhatsAppFloat from '../components/WhatsAppFloat.jsx'
+import CartDrawer from '../components/CartDrawer.jsx'
 
 export default function MainLayout() {
   const { pathname } = useLocation()
@@ -20,6 +21,7 @@ export default function MainLayout() {
         <Outlet />
       </main>
       <Footer />
+      <CartDrawer />
       <WhatsAppFloat />
     </div>
   )

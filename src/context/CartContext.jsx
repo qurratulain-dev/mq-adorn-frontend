@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { shippingFeeFor } from '../config/shipping.js'
 
 const CartContext = createContext(null)
 const CART_KEY = 'mq-adorn-cart'
@@ -12,10 +13,18 @@ function readList(key) {
   }
 }
 
-// Minimal cart/wishlist state persisted in localStorage. Expanded in the cart step.
+export function sameCartLine(item, slug, color, size) {
+  return item.slug === slug && (item.color || null) === (color || null) && (item.size || null) === (size || null)
+}
+
+export function cartLineKey(item) {
+  return [item.slug, item.color || '', item.size || ''].join('::')
+}
+
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => readList(CART_KEY))
   const [wishlist, setWishlist] = useState(() => readList(WISHLIST_KEY))
+  const [cartOpen, setCartOpen] = useState(false)
 
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(items))
@@ -25,22 +34,30 @@ export function CartProvider({ children }) {
     localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist))
   }, [wishlist])
 
-  const value = useMemo(
-    () => ({
+  const value = useMemo(() => {
+    const subtotal = items.reduce((sum, item) => sum + Number(item.price || 0) * (item.quantity || 1), 0)
+    const shippingFee = shippingFeeFor(subtotal)
+    const total = subtotal + shippingFee
+
+    return {
       items,
       setItems,
       wishlist,
       setWishlist,
+      cartOpen,
+      openCart: () => setCartOpen(true),
+      closeCart: () => setCartOpen(false),
+      toggleCart: () => setCartOpen((open) => !open),
       cartCount: items.reduce((sum, item) => sum + (item.quantity || 1), 0),
+      subtotal,
+      shippingFee,
+      total,
       addToCart: (product, options = {}) => {
         const quantity = Math.max(1, Number(options.quantity) || 1)
         const color = options.color || null
         const size = options.size || null
-        const sameLine = (item) =>
-          item.slug === product.slug && (item.color || null) === color && (item.size || null) === size
-
         setItems((current) => {
-          const index = current.findIndex(sameLine)
+          const index = current.findIndex((item) => sameCartLine(item, product.slug, color, size))
           if (index === -1) {
             return [
               ...current,
@@ -59,7 +76,18 @@ export function CartProvider({ children }) {
             i === index ? { ...item, quantity: (item.quantity || 1) + quantity } : item,
           )
         })
+        if (options.open !== false) setCartOpen(true)
       },
+      updateQuantity: (slug, color, size, quantity) => {
+        const next = Math.max(1, Number(quantity) || 1)
+        setItems((current) =>
+          current.map((item) => (sameCartLine(item, slug, color, size) ? { ...item, quantity: next } : item)),
+        )
+      },
+      removeItem: (slug, color, size) => {
+        setItems((current) => current.filter((item) => !sameCartLine(item, slug, color, size)))
+      },
+      clearCart: () => setItems([]),
       toggleWishlist: (product) => {
         setWishlist((current) => {
           const exists = current.some((item) => item.slug === product.slug)
@@ -68,9 +96,8 @@ export function CartProvider({ children }) {
         })
       },
       isWishlisted: (slug) => wishlist.some((item) => item.slug === slug),
-    }),
-    [items, wishlist],
-  )
+    }
+  }, [items, wishlist, cartOpen])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

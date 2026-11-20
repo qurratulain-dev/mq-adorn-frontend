@@ -7,15 +7,28 @@ import { BagIcon, ChevronDownIcon, CloseIcon, HeartIcon, MenuIcon, SearchIcon, U
 import { useCart } from '../context/CartContext.jsx'
 import SearchPanel from './SearchPanel.jsx'
 
-function IconButton({ label, to, children, badge }) {
-  return (
-    <Link to={to} aria-label={label} className="relative p-2 text-primary transition hover:text-gold">
+function IconButton({ label, to, onClick, children, badge }) {
+  const className = 'relative p-2 text-primary transition hover:text-gold'
+  const inner = (
+    <>
       {children}
       {badge > 0 && (
         <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[10px] font-semibold text-primary lg:bg-primary lg:text-white">
           {badge}
         </span>
       )}
+    </>
+  )
+  if (onClick) {
+    return (
+      <button type="button" aria-label={label} className={className} onClick={onClick}>
+        {inner}
+      </button>
+    )
+  }
+  return (
+    <Link to={to} aria-label={label} className={className}>
+      {inner}
     </Link>
   )
 }
@@ -130,7 +143,7 @@ export default function Header() {
   const searchOpen = searchKey === location.key
   const setOpen = (value) => setMenuKey(value ? location.key : null)
   const toggleSearch = () => setSearchKey(searchOpen ? null : location.key)
-  const { cartCount, wishlist } = useCart()
+  const { cartCount, wishlist, toggleCart } = useCart()
 
   const icons = (
     <div className="flex items-center gap-0.5 sm:gap-1">
@@ -150,7 +163,7 @@ export default function Header() {
       <IconButton label="Wishlist" to="/wishlist" badge={wishlist.length}>
         <HeartIcon />
       </IconButton>
-      <IconButton label="Cart" to="/cart" badge={cartCount}>
+      <IconButton label="Cart" onClick={toggleCart} badge={cartCount}>
         <BagIcon />
       </IconButton>
     </div>

@@ -32,3 +32,23 @@ export const getProducts = (params = {}, options = {}) => {
   return apiFetch(`/products${query ? `?${query}` : ''}`, options)
 }
 export const getProduct = (slug, options = {}) => apiFetch(`/products/${slug}`, options)
+
+export async function createOrder(formData, options = {}) {
+  const res = await fetch(`${API_URL}/orders`, {
+    method: 'POST',
+    headers: { Accept: 'application/json', ...(options.headers || {}) },
+    body: formData,
+    signal: options.signal,
+  })
+  const payload = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    const error = new Error(payload.message || `API ${res.status}: ${res.statusText}`)
+    error.status = res.status
+    error.errors = payload.errors
+    error.body = payload
+    throw error
+  }
+  return payload
+}
+
+export const getOrder = (orderNumber, options = {}) => apiFetch(`/orders/${orderNumber}`, options)

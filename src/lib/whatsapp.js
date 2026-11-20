@@ -8,6 +8,9 @@ export function whatsappNumber() {
 }
 
 export function whatsappHref(details = {}) {
+  if (details.message) {
+    return `${WHATSAPP_LINK}?text=${encodeURIComponent(details.message)}`
+  }
   const { name, url } = details
   if (!name && !url) return WHATSAPP_LINK
   const lines = ['Hello MQ Adorn,']
