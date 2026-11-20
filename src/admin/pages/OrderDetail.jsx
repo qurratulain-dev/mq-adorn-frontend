@@ -44,7 +44,8 @@ export default function AdminOrderDetail() {
       const payload = await action()
       if (payload?.data) setOrder(payload.data)
     } catch (err) {
-      setError(err.message || 'The action could not be completed.')
+      const fieldError = err?.errors && Object.values(err.errors).flat().find(Boolean)
+      setError(fieldError || err.message || 'The action could not be completed.')
     } finally {
       setBusy('')
     }
