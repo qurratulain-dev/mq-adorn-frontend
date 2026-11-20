@@ -22,5 +22,13 @@ export async function apiFetch(path, options = {}) {
 
 export const getHealth = () => apiFetch('/health')
 export const getCategories = (type) => apiFetch(`/categories${type ? `?type=${type}` : ''}`)
-export const getProducts = (params = {}, options = {}) => apiFetch(`/products?${new URLSearchParams(params)}`, options)
+export const getProducts = (params = {}, options = {}) => {
+  const search = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '' || value === false) return
+    search.set(key, String(value))
+  })
+  const query = search.toString()
+  return apiFetch(`/products${query ? `?${query}` : ''}`, options)
+}
 export const getProduct = (slug) => apiFetch(`/products/${slug}`)

@@ -53,7 +53,10 @@ export default function Hero() {
         {/* Soft wash so the dark headline stays readable on mobile, where the jewellery is framed on the right. */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#F8E8E6]/95 via-[#F8E8E6]/70 to-transparent md:from-[#F8E8E6]/25 md:via-transparent md:to-transparent" />
 
-        <div className="container-page relative z-10 flex h-full flex-col justify-center py-10 text-primary">
+        <div
+          key={index}
+          className="hero-copy container-page relative z-10 flex h-full flex-col justify-center py-10 text-primary"
+        >
           <p className="text-[11px] font-medium tracking-[0.32em] text-gold uppercase sm:text-xs">
             Jewellery & Dresses
           </p>

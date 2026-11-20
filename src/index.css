@@ -50,3 +50,64 @@
     @apply scale-x-100;
   }
 }
+
+
+/* Motion — kept light, and fully disabled when the user prefers reduced motion. */
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .card-lift {
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -24px rgba(26, 26, 26, 0.55);
+  }
+  .img-zoom {
+    transition: transform 0.6s ease;
+  }
+  .group:hover .img-zoom,
+  .card-lift:hover .img-zoom {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes hero-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-copy {
+  animation: hero-copy-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .card-lift,
+  .img-zoom,
+  .group:hover .img-zoom,
+  .card-lift:hover .img-zoom,
+  .card-lift:hover {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    box-shadow: none;
+    animation: none;
+  }
+  .hero-copy {
+    animation: none;
+  }
+}

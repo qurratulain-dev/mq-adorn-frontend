@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getProducts } from '../api/client.js'
 import { ArrowRightIcon } from './Icons.jsx'
 import ProductCard, { ProductCardSkeleton } from './ProductCard.jsx'
+import Reveal from './Reveal.jsx'
 
 export default function BestSellers() {
   const [products, setProducts] = useState([])
@@ -12,7 +13,7 @@ export default function BestSellers() {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 60000)
 
-    getProducts({ per_page: 8 }, { signal: controller.signal })
+    getProducts({ sort: 'best_selling', per_page: 8 }, { signal: controller.signal })
       .then((payload) => {
         const list = Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : []
         const featured = list.filter((item) => item.is_best_seller)
@@ -29,7 +30,7 @@ export default function BestSellers() {
   }, [])
 
   return (
-    <section className="bg-cream" aria-labelledby="best-sellers-heading">
+    <Reveal as="section" className="bg-cream" aria-labelledby="best-sellers-heading">
       <div className="container-page py-10 sm:py-14">
         <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
           <h2 id="best-sellers-heading" className="font-heading text-3xl font-medium sm:text-4xl">
@@ -62,12 +63,14 @@ export default function BestSellers() {
 
         {status === 'ready' && products.length > 0 && (
           <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard key={product.id || product.slug} product={product} />
+            {products.map((product, index) => (
+              <Reveal key={product.id || product.slug} delay={index * 70}>
+                <ProductCard product={product} />
+              </Reveal>
             ))}
           </div>
         )}
       </div>
-    </section>
+    </Reveal>
   )
 }

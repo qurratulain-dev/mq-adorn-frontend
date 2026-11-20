@@ -5,13 +5,14 @@ import Logo from './Logo.jsx'
 import { NAV_LINKS } from './navLinks.js'
 import { BagIcon, ChevronDownIcon, CloseIcon, HeartIcon, MenuIcon, SearchIcon, UserIcon } from './Icons.jsx'
 import { useCart } from '../context/CartContext.jsx'
+import SearchPanel from './SearchPanel.jsx'
 
 function IconButton({ label, to, children, badge }) {
   return (
     <Link to={to} aria-label={label} className="relative p-2 text-primary transition hover:text-gold">
       {children}
       {badge > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-white">
+        <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[10px] font-semibold text-primary lg:bg-primary lg:text-white">
           {badge}
         </span>
       )}
@@ -21,6 +22,13 @@ function IconButton({ label, to, children, badge }) {
 
 function navClassName(highlight, extra = '') {
   return `nav-link ${highlight ? 'text-sale hover:text-sale' : ''} ${extra}`
+}
+
+// Original mobile-menu styling (uppercase, no gold underline).
+function mobileLinkClass(highlight, extra = '') {
+  return `relative inline-flex items-center gap-1 py-2 text-[13px] font-medium tracking-wider uppercase transition hover:text-gold ${
+    highlight ? 'text-sale' : 'text-primary'
+  } ${extra}`
 }
 
 function DesktopDropdown({ link }) {
@@ -91,7 +99,7 @@ function DesktopDropdown({ link }) {
       <ul
         id={menuId}
         role="menu"
-        className={`absolute top-full left-1/2 z-50 min-w-52 -translate-x-1/2 border border-black/10 bg-card py-2 shadow-[0_16px_40px_-24px_rgba(26,26,26,0.45)] transition duration-150 ${
+        className={`absolute top-full left-1/2 z-50 min-w-52 -translate-x-1/2 border border-black/10 bg-card py-2 shadow-[0_16px_40px_-24px_rgba(26,26,26,0.45)] transition duration-200 ease-out motion-reduce:transition-none ${
           open ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none -translate-y-1 opacity-0'
         }`}
       >
@@ -150,7 +158,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/5 bg-cream/95 backdrop-blur">
-      <div className="container-page flex h-[4.5rem] items-center gap-4 lg:h-20">
+      <div className="container-page flex h-20 items-center justify-between gap-4 lg:justify-start">
         <button
           type="button"
           className="p-2 lg:hidden"
@@ -191,29 +199,17 @@ export default function Header() {
         <div className="ml-auto lg:ml-0">{icons}</div>
       </div>
 
-      {searchOpen && (
-        <div className="border-t border-black/5 bg-card">
-          <form className="container-page flex items-center gap-3 py-3" onSubmit={(e) => e.preventDefault()}>
-            <SearchIcon className="text-muted" />
-            <input
-              autoFocus
-              type="search"
-              placeholder="Search rings, necklaces, dresses…"
-              className="w-full bg-transparent py-2 text-sm outline-none placeholder:text-muted"
-            />
-          </form>
-        </div>
-      )}
+      <SearchPanel open={searchOpen} onClose={() => setSearchKey(null)} />
 
       {/* Portal the drawer to document.body so header backdrop-blur does not clip position:fixed. */}
       {createPortal(
         <div className={`fixed inset-0 z-50 lg:hidden ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
           <div
-            className={`absolute inset-0 bg-black/40 transition-opacity ${open ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ease-out motion-reduce:transition-none ${open ? 'opacity-100' : 'opacity-0'}`}
             onClick={() => setOpen(false)}
           />
           <aside
-            className={`absolute top-0 left-0 flex h-full w-80 max-w-[85%] flex-col bg-cream shadow-xl transition-transform duration-300 ${
+            className={`absolute top-0 left-0 flex h-full w-80 max-w-[85%] flex-col bg-cream shadow-xl transition-transform duration-300 ease-out motion-reduce:transition-none ${
               open ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
@@ -232,7 +228,7 @@ export default function Header() {
                     {link.children ? (
                       <>
                         <div className="flex items-center gap-1">
-                          <NavLink to={link.to} className={`min-w-0 flex-1 ${navClassName(link.highlight, 'block py-3.5')}`}>
+                          <NavLink to={link.to} className={`min-w-0 flex-1 ${mobileLinkClass(link.highlight, 'block py-3.5')}`}>
                             {link.label}
                           </NavLink>
                           <button
@@ -261,7 +257,7 @@ export default function Header() {
                         )}
                       </>
                     ) : (
-                      <NavLink to={link.to} className={`block py-3.5 ${navClassName(link.highlight)}`}>
+                      <NavLink to={link.to} className={`block py-3.5 ${mobileLinkClass(link.highlight)}`}>
                         {link.label}
                       </NavLink>
                     )}

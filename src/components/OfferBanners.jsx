@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { ArrowRightIcon } from './Icons.jsx'
+import Reveal from './Reveal.jsx'
 
 export default function OfferBanners() {
   return (
-    <section className="bg-cream" aria-label="Featured offers">
+    <Reveal as="section" className="bg-cream" aria-label="Featured offers">
       <div className="container-page grid gap-4 py-4 sm:py-6 lg:grid-cols-[1.4fr_1fr] lg:gap-5">
         <Link
           to="/shop?sort=new"
@@ -12,7 +13,7 @@ export default function OfferBanners() {
           <img
             src="/banners/new-collection.jpg"
             alt="Traditional gold necklace and earrings from the new collection"
-            className="absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+            className="img-zoom absolute inset-0 h-full w-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/35 to-black/55" />
           <div className="relative z-10 flex h-full flex-col items-start justify-center p-6 text-white sm:items-end sm:p-10 sm:text-right">
@@ -34,7 +35,7 @@ export default function OfferBanners() {
             <img
               src="/banners/gifts.jpg"
               alt="Pink gift box tied with a gold ribbon"
-              className="absolute inset-0 h-full w-full object-cover object-[70%_center] transition duration-500 group-hover:scale-[1.03]"
+              className="img-zoom absolute inset-0 h-full w-full object-cover object-[70%_center]"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-blush/95 via-blush/80 to-blush/10" />
             <div className="relative z-10 flex h-full max-w-[55%] flex-col justify-center p-5 sm:p-6">
@@ -54,7 +55,7 @@ export default function OfferBanners() {
             <img
               src="/banners/everyday.jpg"
               alt="Gold bracelet on a blush background"
-              className="absolute inset-0 h-full w-full object-cover object-[75%_center] transition duration-500 group-hover:scale-[1.03]"
+              className="img-zoom absolute inset-0 h-full w-full object-cover object-[75%_center]"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#f6e6df]/95 via-[#f6e6df]/75 to-transparent" />
             <div className="relative z-10 flex h-full max-w-[55%] flex-col justify-center p-5 sm:p-6">
@@ -66,6 +67,6 @@ export default function OfferBanners() {
           </Link>
         </div>
       </div>
-    </section>
+    </Reveal>
   )
 }

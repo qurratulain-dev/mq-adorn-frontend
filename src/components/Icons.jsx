@@ -66,3 +66,35 @@ export const TruckIcon = (p) => (
     <circle cx="17" cy="18" r="2" />
   </svg>
 )
+export const FilterIcon = (p) => (
+  <svg {...base} {...p}>
+    <path d="M4 6h16M7 12h10M10 18h4" />
+  </svg>
+)
+export const Grid2Icon = (p) => (
+  <svg {...base} width={18} height={18} {...p}>
+    <rect x="3" y="3" width="7" height="18" />
+    <rect x="14" y="3" width="7" height="18" />
+  </svg>
+)
+export const Grid3Icon = (p) => (
+  <svg {...base} width={18} height={18} {...p}>
+    <rect x="3" y="3" width="5" height="18" />
+    <rect x="9.5" y="3" width="5" height="18" />
+    <rect x="16" y="3" width="5" height="18" />
+  </svg>
+)
+export const Grid4Icon = (p) => (
+  <svg {...base} width={18} height={18} {...p}>
+    <rect x="3" y="3" width="3.5" height="18" />
+    <rect x="8.2" y="3" width="3.5" height="18" />
+    <rect x="13.3" y="3" width="3.5" height="18" />
+    <rect x="18.5" y="3" width="3.5" height="18" />
+  </svg>
+)
+export const SpinnerIcon = (p) => (
+  <svg {...base} className={`animate-spin ${p.className || ''}`} width={p.width || 20} height={p.height || 20} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" opacity="0.25" />
+    <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+)

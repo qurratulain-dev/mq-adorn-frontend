@@ -11,11 +11,11 @@ export default function ProductCard({ product }) {
   const loved = isWishlisted(product.slug)
 
   return (
-    <article className="flex h-full flex-col bg-card p-3 shadow-[0_10px_30px_-22px_rgba(26,26,26,0.45)] sm:p-4">
+    <article className="card-lift flex h-full flex-col bg-card p-3 shadow-[0_10px_30px_-22px_rgba(26,26,26,0.45)] sm:p-4">
       <div className="relative aspect-square overflow-hidden bg-cream">
         <Link to={`/product/${product.slug}`} className="block h-full w-full">
           {image ? (
-            <img src={image} alt={product.name} className="h-full w-full object-contain p-3" />
+            <img src={image} alt={product.name} className="img-zoom h-full w-full object-contain p-3" />
           ) : (
             <div className="flex h-full items-center justify-center text-xs text-muted">No image</div>
           )}
