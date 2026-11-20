@@ -55,17 +55,20 @@ export default function Hero() {
 
         <div className="container-page relative z-10 flex h-full flex-col justify-center py-10 text-primary">
           <p className="text-[11px] font-medium tracking-[0.32em] text-gold uppercase sm:text-xs">
-            Timeless Elegance
+            Jewellery & Dresses
           </p>
-          <h1 className="mt-3 max-w-md font-heading text-4xl leading-[1.15] font-medium sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
-            Jewelry for Every Story
+          <h1 className="mt-3 max-w-lg font-heading text-4xl leading-[1.15] font-medium sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            Elegance in Every Detail
           </h1>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted sm:text-[15px]">
-            Discover our latest collection of exquisite designs crafted to celebrate you.
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-muted sm:text-[15px]">
+            Timeless jewellery and graceful dresses, crafted to make every moment shine. Delivered across Pakistan.
           </p>
-          <div className="mt-7">
-            <Link to="/shop" className="btn-primary px-8">
-              Shop Now <ArrowRightIcon />
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link to="/shop?category=jewellery" className="btn-primary px-7">
+              Shop Jewellery <ArrowRightIcon />
+            </Link>
+            <Link to="/shop?category=dresses" className="btn-outline px-7">
+              Explore Dresses
             </Link>
           </div>
         </div>
