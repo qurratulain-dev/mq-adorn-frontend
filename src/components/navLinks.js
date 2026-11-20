@@ -21,6 +21,7 @@ export const JEWELLERY_LINKS = [
   { label: 'Bangles', to: '/shop?category=jewellery&sub=bangles' },
   { label: 'Jewellery Sets', to: '/shop?category=jewellery&sub=jewellery-sets' },
   { label: 'Anklets', to: '/shop?category=jewellery&sub=anklets' },
+  { label: 'Gifts', to: '/shop?category=jewellery&sub=gifts' },
 ]
 
 // Dress type is a single category in the seeder; these subs will be used by the Shop page.

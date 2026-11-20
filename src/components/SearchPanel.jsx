@@ -105,7 +105,7 @@ export default function SearchPanel({ open, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`absolute inset-x-0 top-0 flex h-full flex-col bg-cream shadow-[0_24px_60px_-28px_rgba(26,26,26,0.55)] transition-all duration-300 ease-out motion-reduce:transition-none sm:h-auto sm:max-h-[min(36rem,85vh)] ${
+        className={`absolute inset-x-0 top-0 flex h-full flex-col overflow-hidden bg-cream shadow-[0_24px_60px_-28px_rgba(26,26,26,0.55)] transition-all duration-300 ease-out motion-reduce:transition-none sm:h-auto sm:max-h-[min(42rem,88vh)] ${
           open ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-6 opacity-0'
         }`}
       >
@@ -116,12 +116,13 @@ export default function SearchPanel({ open, onClose }) {
           <SearchIcon className="shrink-0 text-gold" width={26} height={26} />
           <input
             ref={inputRef}
-            type="search"
+            type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search for jewellery, dresses, gifts…"
             className="w-full bg-transparent font-heading text-2xl text-primary outline-none placeholder:text-muted/70 sm:text-3xl"
             autoComplete="off"
+            autoCorrect="off"
             enterKeyHint="search"
           />
           <button type="button" aria-label="Close search" className="p-2 text-primary transition hover:text-gold" onClick={onClose}>
@@ -129,7 +130,7 @@ export default function SearchPanel({ open, onClose }) {
           </button>
         </form>
 
-        <div className="container-page flex-1 overflow-y-auto py-5 sm:py-6">
+        <div className="container-page min-h-0 flex-1 overflow-y-auto py-5 sm:py-6">
           <p className="text-[11px] font-medium tracking-[0.22em] text-muted uppercase">Popular searches</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {POPULAR.map((item) => (
