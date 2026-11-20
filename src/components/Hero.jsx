@@ -1,24 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeftIcon, ChevronRightIcon } from './Icons.jsx'
+import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from './Icons.jsx'
 
-// Dummy royalty-free Unsplash photos — replace with real MQ Adorn product pictures later.
+// The same hero photograph is used on all three slides until real campaign photos arrive.
+const SLIDE_SRC = '/heroes/hero.jpg'
 const SLIDES = [
-  {
-    src: '/heroes/jewellery-set.jpg',
-    alt: 'Traditional gold necklace and earrings set',
-    position: 'center',
-  },
-  {
-    src: '/heroes/necklaces.jpg',
-    alt: 'Layered gold pendant necklaces',
-    position: 'center',
-  },
-  {
-    src: '/heroes/ring.jpg',
-    alt: 'Diamond halo ring on a dark box',
-    position: 'center',
-  },
+  { src: SLIDE_SRC, alt: 'Gold necklace, earrings and ring on blush satin' },
+  { src: `${SLIDE_SRC}?slide=2`, alt: 'Gold necklace, earrings and ring on blush satin' },
+  { src: `${SLIDE_SRC}?slide=3`, alt: 'Gold necklace, earrings and ring on blush satin' },
 ]
 
 const INTERVAL = 5500
@@ -42,56 +31,48 @@ export default function Hero() {
 
   return (
     <section
-      className="relative isolate h-[70vh] min-h-[28rem] overflow-hidden bg-primary sm:h-[78vh] sm:min-h-[32rem] lg:max-h-[46rem]"
+      className="relative isolate overflow-hidden bg-blush"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
       aria-label="Featured collections"
     >
-      {SLIDES.map((slide, i) => (
-        <img
-          key={slide.src}
-          src={slide.src}
-          alt={i === index ? slide.alt : ''}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
-            i === index ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ objectPosition: slide.position }}
-          aria-hidden={i !== index}
-        />
-      ))}
+      <div className="relative h-[26rem] sm:h-[28rem] md:h-auto md:aspect-[1983/793] lg:min-h-[28rem] lg:max-h-[36rem]">
+        {SLIDES.map((slide, i) => (
+          <img
+            key={slide.src}
+            src={SLIDE_SRC}
+            alt={i === index ? slide.alt : ''}
+            className={`absolute inset-0 h-full w-full object-cover object-[84%_center] md:object-center transition-opacity duration-700 ease-out ${
+              i === index ? 'opacity-100' : 'opacity-0'
+            }`}
+            aria-hidden={i !== index}
+          />
+        ))}
 
-      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/15" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
+        {/* Soft wash so the dark headline stays readable on mobile, where the jewellery is framed on the right. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F8E8E6]/95 via-[#F8E8E6]/70 to-transparent md:from-[#F8E8E6]/25 md:via-transparent md:to-transparent" />
 
-      <div className="container-page relative z-10 flex h-full flex-col justify-center text-white">
-        <p className="text-[11px] font-medium tracking-[0.35em] text-gold uppercase sm:text-xs">
-          Jewellery &amp; Dresses
-        </p>
-        <h1 className="mt-4 max-w-xl font-heading text-4xl leading-tight font-semibold sm:text-5xl lg:text-7xl">
-          Elegance in Every Detail
-        </h1>
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-white/80 sm:text-base">
-          Timeless jewellery and graceful dresses, crafted to make every moment shine. Delivered across Pakistan.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            to="/shop?category=jewellery"
-            className="inline-flex items-center justify-center bg-gold px-7 py-3 text-sm font-medium tracking-wide text-primary uppercase transition hover:bg-white"
-          >
-            Shop Jewellery
-          </Link>
-          <Link
-            to="/shop?category=dresses"
-            className="inline-flex items-center justify-center border border-white px-7 py-3 text-sm font-medium tracking-wide text-white uppercase transition hover:bg-white hover:text-primary"
-          >
-            Explore Dresses
-          </Link>
+        <div className="container-page relative z-10 flex h-full flex-col justify-center py-10 text-primary">
+          <p className="text-[11px] font-medium tracking-[0.32em] text-gold uppercase sm:text-xs">
+            Timeless Elegance
+          </p>
+          <h1 className="mt-3 max-w-md font-heading text-4xl leading-[1.15] font-medium sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            Jewelry for Every Story
+          </h1>
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted sm:text-[15px]">
+            Discover our latest collection of exquisite designs crafted to celebrate you.
+          </p>
+          <div className="mt-7">
+            <Link to="/shop" className="btn-primary px-8">
+              Shop Now <ArrowRightIcon />
+            </Link>
+          </div>
         </div>
       </div>
 
-      <div className="absolute right-4 bottom-5 left-4 z-10 flex items-center justify-between sm:right-8 sm:bottom-7 sm:left-8">
-        <div className="flex items-center gap-2" role="tablist" aria-label="Hero slides">
+      <div className="pointer-events-none absolute right-4 bottom-4 left-4 z-10 flex items-end justify-between sm:right-8 sm:bottom-6 sm:left-8">
+        <div className="pointer-events-auto flex items-center gap-2" role="tablist" aria-label="Hero slides">
           {SLIDES.map((slide, i) => (
             <button
               key={slide.src}
@@ -100,17 +81,17 @@ export default function Hero() {
               aria-selected={i === index}
               aria-label={`Show slide ${i + 1}`}
               className={`h-2 rounded-full transition-all ${
-                i === index ? 'w-7 bg-gold' : 'w-2 bg-white/50 hover:bg-white'
+                i === index ? 'w-7 bg-gold' : 'w-2 bg-primary/25 hover:bg-primary/50'
               }`}
               onClick={() => setIndex(i)}
             />
           ))}
         </div>
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className="pointer-events-auto hidden items-center gap-2 sm:flex">
           <button
             type="button"
             aria-label="Previous slide"
-            className="flex h-10 w-10 items-center justify-center border border-white/40 text-white transition hover:border-gold hover:text-gold"
+            className="flex h-10 w-10 items-center justify-center border border-primary/20 bg-white/70 text-primary backdrop-blur-sm transition hover:border-gold hover:text-gold"
             onClick={() => go(index - 1)}
           >
             <ChevronLeftIcon />
@@ -118,7 +99,7 @@ export default function Hero() {
           <button
             type="button"
             aria-label="Next slide"
-            className="flex h-10 w-10 items-center justify-center border border-white/40 text-white transition hover:border-gold hover:text-gold"
+            className="flex h-10 w-10 items-center justify-center border border-primary/20 bg-white/70 text-primary backdrop-blur-sm transition hover:border-gold hover:text-gold"
             onClick={() => go(index + 1)}
           >
             <ChevronRightIcon />

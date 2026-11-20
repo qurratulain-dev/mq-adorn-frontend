@@ -33,9 +33,20 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-primary px-7 py-3 text-sm font-medium tracking-wide text-white uppercase transition hover:bg-gold;
+    @apply inline-flex items-center justify-center gap-2 bg-gold px-7 py-3 text-sm font-medium tracking-wide text-white uppercase transition hover:bg-gold-dark;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 border border-primary px-7 py-3 text-sm font-medium tracking-wide uppercase transition hover:bg-primary hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 border border-primary bg-white px-7 py-3 text-sm font-medium tracking-wide uppercase transition hover:bg-primary hover:text-white;
+  }
+  .nav-link {
+    @apply relative inline-flex items-center gap-1 py-2 text-sm font-medium text-primary transition-colors;
+  }
+  .nav-link::after {
+    content: "";
+    @apply absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-gold transition-transform duration-200;
+  }
+  .nav-link:hover::after,
+  .nav-link[data-active="true"]::after {
+    @apply scale-x-100;
   }
 }

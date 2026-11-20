@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 export default function Logo({ light = false, className = '' }) {
   const text = light ? 'text-white' : 'text-primary'
   return (
-    <Link to="/" aria-label="MQ Adorn home" className={`inline-flex items-center gap-2.5 ${className}`}>
-      <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden="true">
+    <Link to="/" aria-label="MQ Adorn home" className={`inline-flex items-center gap-2 ${className}`}>
+      <svg viewBox="0 0 48 48" className="hidden h-9 w-9 shrink-0 sm:block sm:h-10 sm:w-10" aria-hidden="true">
         <circle cx="24" cy="24" r="22" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
         <circle cx="24" cy="24" r="18" fill="none" stroke="#D4AF37" strokeWidth="0.75" opacity="0.6" />
         <path d="M24 6.5l1.6 3.2L24 12.5l-1.6-2.8z" fill="#D4AF37" />
@@ -13,13 +13,8 @@ export default function Logo({ light = false, className = '' }) {
           MQ
         </text>
       </svg>
-      <span className="flex flex-col leading-none">
-        <span className={`font-heading text-2xl font-semibold tracking-wide ${text}`}>
-          MQ <span className="text-gold">Adorn</span>
-        </span>
-        <span className={`mt-1 hidden whitespace-nowrap text-[9px] sm:block tracking-[0.35em] uppercase ${light ? 'text-white/60' : 'text-muted'}`}>
-          Jewellery &amp; Dresses
-        </span>
+      <span className={`whitespace-nowrap font-heading text-[1.55rem] leading-none font-semibold tracking-wide sm:text-[1.85rem] ${text}`}>
+        MQ <span className={light ? 'text-white' : 'text-gold'}>Adorn</span>
       </span>
     </Link>
   )

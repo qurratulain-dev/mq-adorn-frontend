@@ -76,7 +76,7 @@ export default function Footer() {
               aria-label="Email address"
               className="w-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-white/40 focus:border-gold"
             />
-            <button type="submit" className="bg-gold px-5 text-xs font-semibold tracking-wider text-primary uppercase hover:bg-white">
+            <button type="submit" className="bg-gold px-5 text-xs font-semibold tracking-wider text-white uppercase hover:bg-gold-dark">
               Subscribe
             </button>
           </form>
