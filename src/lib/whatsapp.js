@@ -1,10 +1,17 @@
+// Single source of truth for the MQ Adorn store WhatsApp (Qurat, 20 Nov 2026).
+export const WHATSAPP_DISPLAY = '+92 329 5349850'
+export const WHATSAPP_NUMBER = '923295349850'
+export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`
+
 export function whatsappNumber() {
-  return String(import.meta.env.VITE_WHATSAPP_NUMBER || '').replace(/\D/g, '')
+  return WHATSAPP_NUMBER
 }
 
-export function whatsappHref({ name, url }) {
-  const message = `Hello MQ Adorn, I would like to know more about "${name}".\n${url}`
-  const number = whatsappNumber()
-  const text = encodeURIComponent(message)
-  return number ? `https://wa.me/${number}?text=${text}` : `https://wa.me/?text=${text}`
+export function whatsappHref(details = {}) {
+  const { name, url } = details
+  if (!name && !url) return WHATSAPP_LINK
+  const lines = ['Hello MQ Adorn,']
+  if (name) lines.push(`I would like to know more about "${name}".`)
+  if (url) lines.push(url)
+  return `${WHATSAPP_LINK}?text=${encodeURIComponent(lines.join('\n'))}`
 }

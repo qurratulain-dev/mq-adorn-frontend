@@ -9,7 +9,7 @@ import { useCart } from '../context/CartContext.jsx'
 import { formatRs, salePercent } from '../lib/format.js'
 import { availableStock, colorHex, firstAvailableSelection, findVariant, uniqueValues } from '../lib/product.js'
 import { shopPath } from '../lib/shopParams.js'
-import { whatsappHref } from '../lib/whatsapp.js'
+import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
 
 const DETAIL_SECTIONS = (product) => {
   const isDress = product.type === 'dress'
@@ -418,7 +418,7 @@ export default function Product() {
               rel="noopener noreferrer"
               className="btn-outline mt-3 w-full"
             >
-              <WhatsAppIcon width={18} height={18} /> Chat on WhatsApp
+              <WhatsAppIcon width={18} height={18} /> Chat on WhatsApp · {WHATSAPP_DISPLAY}
             </a>
             <p className="mt-3 text-xs leading-relaxed text-muted">
               Opens a free WhatsApp chat with this product name and link already filled in. Payment is by JazzCash,

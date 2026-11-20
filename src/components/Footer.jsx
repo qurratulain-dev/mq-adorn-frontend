@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { SOCIAL_LINKS } from './navLinks.js'
-import { InstagramIcon, TikTokIcon } from './Icons.jsx'
+import { InstagramIcon, TikTokIcon, WhatsAppIcon } from './Icons.jsx'
+import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
 
 const YEAR = new Date().getFullYear()
 
@@ -69,6 +70,15 @@ export default function Footer() {
               )
             })}
           </nav>
+          <a
+            href={whatsappHref()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-gold"
+          >
+            <WhatsAppIcon width={18} height={18} />
+            WhatsApp {WHATSAPP_DISPLAY}
+          </a>
           <form className="mt-6 flex max-w-sm" onSubmit={(e) => e.preventDefault()}>
             <input
               type="email"
