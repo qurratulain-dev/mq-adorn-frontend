@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { shippingFeeFor } from '../config/shipping.js'
+import { useStoreSettings } from './StoreSettingsContext.jsx'
 
 const CartContext = createContext(null)
 const CART_KEY = 'mq-adorn-cart'
@@ -22,6 +22,7 @@ export function cartLineKey(item) {
 }
 
 export function CartProvider({ children }) {
+  const { shippingFeeFor } = useStoreSettings()
   const [items, setItems] = useState(() => readList(CART_KEY))
   const [wishlist, setWishlist] = useState(() => readList(WISHLIST_KEY))
   const [cartOpen, setCartOpen] = useState(false)
@@ -97,7 +98,7 @@ export function CartProvider({ children }) {
       },
       isWishlisted: (slug) => wishlist.some((item) => item.slug === slug),
     }
-  }, [items, wishlist, cartOpen])
+  }, [items, wishlist, cartOpen, shippingFeeFor])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

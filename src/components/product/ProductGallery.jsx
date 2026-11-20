@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { mediaUrl } from '../../lib/media.js'
 import { createPortal } from 'react-dom'
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, ZoomIcon } from '../Icons.jsx'
 
@@ -71,7 +72,7 @@ export default function ProductGallery({ images, name, badge }) {
               onClick={() => setOpen(true)}
               aria-label={`View ${name} image ${i + 1} larger`}
             >
-              <img src={src} alt={i === index ? name : ''} className="aspect-square w-full object-cover" />
+              <img src={mediaUrl(src)} alt={i === index ? name : ''} className="aspect-square w-full object-cover" />
             </button>
           ))}
         </div>
@@ -84,7 +85,7 @@ export default function ProductGallery({ images, name, badge }) {
           aria-label={`View ${name} larger`}
         >
           <img
-            src={current}
+            src={mediaUrl(current)}
             alt={name}
             className="aspect-square w-full object-cover transition duration-700 ease-out motion-reduce:transition-none group-hover:scale-110 motion-reduce:group-hover:scale-100"
           />
@@ -150,7 +151,7 @@ export default function ProductGallery({ images, name, badge }) {
                 }`}
                 onClick={() => setIndex(i)}
               >
-                <img src={src} alt="" className="h-full w-full object-cover" />
+                <img src={mediaUrl(src)} alt="" className="h-full w-full object-cover" />
               </button>
             </li>
           ))}
@@ -170,7 +171,7 @@ export default function ProductGallery({ images, name, badge }) {
             </div>
             <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-8">
               <img
-                src={current}
+                src={mediaUrl(current)}
                 alt={name}
                 className="max-h-full max-w-full object-contain"
               />

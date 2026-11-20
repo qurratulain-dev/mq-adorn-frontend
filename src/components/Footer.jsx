@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { SOCIAL_LINKS } from './navLinks.js'
 import { InstagramIcon, TikTokIcon, WhatsAppIcon } from './Icons.jsx'
-import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
+import { whatsappHref } from '../lib/whatsapp.js'
+import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
 
 const YEAR = new Date().getFullYear()
 
@@ -45,6 +46,7 @@ const COLUMNS = [
 ]
 
 export default function Footer() {
+  const { whatsappDisplay } = useStoreSettings()
   return (
     <footer className="bg-primary text-white/80">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
@@ -77,7 +79,7 @@ export default function Footer() {
             className="mt-4 inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-gold"
           >
             <WhatsAppIcon width={18} height={18} />
-            WhatsApp {WHATSAPP_DISPLAY}
+            WhatsApp {whatsappDisplay}
           </a>
           <form className="mt-6 flex max-w-sm" onSubmit={(e) => e.preventDefault()}>
             <input

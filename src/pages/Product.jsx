@@ -23,9 +23,9 @@ const DETAIL_SECTIONS = (product) => {
     {
       id: 'materials',
       title: isDress ? 'Fabric & care' : 'Materials & care',
-      body: isDress
+      body: product.materials || (isDress
         ? 'Dummy fabric notes — replace with the real composition. For most pieces we recommend a gentle hand wash or a professional laundry, and ironing on a low setting on the reverse. Keep embroidered or embellished areas away from rough surfaces.'
-        : 'Dummy material notes — replace with the real finish and stones. Wipe with a soft dry cloth after wearing, keep away from perfume, water and hairspray, and store separately in a pouch so pieces do not scratch one another.',
+        : 'Dummy material notes — replace with the real finish and stones. Wipe with a soft dry cloth after wearing, keep away from perfume, water and hairspray, and store separately in a pouch so pieces do not scratch one another.'),
     },
     {
       id: 'delivery',

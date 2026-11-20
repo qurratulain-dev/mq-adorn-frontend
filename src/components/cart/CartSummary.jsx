@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext.jsx'
-import { FREE_SHIPPING_THRESHOLD, remainingForFreeShipping } from '../../config/shipping.js'
+import { useStoreSettings } from '../../context/StoreSettingsContext.jsx'
 import { formatRs } from '../../lib/format.js'
 
 export default function CartSummary({ onNavigate, checkoutTo = '/checkout' }) {
+  const { freeShippingThreshold, remainingForFreeShipping } = useStoreSettings()
   const { items, subtotal, shippingFee, total, closeCart } = useCart()
   const remaining = remainingForFreeShipping(subtotal)
   const go = () => {
@@ -15,7 +16,7 @@ export default function CartSummary({ onNavigate, checkoutTo = '/checkout' }) {
     <div>
       {remaining > 0 ? (
         <p className="text-xs leading-relaxed text-muted">
-          Add {formatRs(remaining)} more for free shipping (on orders above {formatRs(FREE_SHIPPING_THRESHOLD)}).
+          Add {formatRs(remaining)} more for free shipping (on orders above {formatRs(freeShippingThreshold)}).
         </p>
       ) : (
         <p className="text-xs text-success">You have qualified for free shipping.</p>

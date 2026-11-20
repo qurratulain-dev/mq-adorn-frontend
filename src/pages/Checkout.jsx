@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { createOrder } from '../api/client.js'
 import CartItem from '../components/cart/CartItem.jsx'
-import { ACCEPTED_PROOF_EXTENSIONS, ACCEPTED_PROOF_TYPES, MAX_PROOF_BYTES, PAYMENT_METHODS, paymentMethodById } from '../config/payment.js'
-import { FREE_SHIPPING_THRESHOLD, remainingForFreeShipping } from '../config/shipping.js'
+import { ACCEPTED_PROOF_EXTENSIONS, ACCEPTED_PROOF_TYPES, MAX_PROOF_BYTES, paymentMethodById as fallbackPaymentMethod } from '../config/payment.js'
+import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs } from '../lib/format.js'
@@ -40,6 +40,7 @@ function firstError(errors) {
 }
 
 export default function Checkout() {
+  const settings = useStoreSettings()
   const navigate = useNavigate()
   const { items, subtotal, shippingFee, total, clearCart } = useCart()
   const { user } = useAuth()
@@ -63,8 +64,8 @@ export default function Checkout() {
   }, [user])
 
 
-  const method = paymentMethodById(form.payment_method)
-  const remaining = remainingForFreeShipping(subtotal)
+  const method = (settings.paymentMethods || []).find((item) => item.id === form.payment_method) || fallbackPaymentMethod(form.payment_method)
+  const remaining = settings.remainingForFreeShipping(subtotal)
 
   const setField = (key, value) => {
     setForm((current) => ({ ...current, [key]: value }))
@@ -253,7 +254,7 @@ export default function Checkout() {
             </p>
             <fieldset className="mt-4 space-y-3">
               <legend className="sr-only">Payment method</legend>
-              {PAYMENT_METHODS.map((item) => {
+              {(settings.paymentMethods || []).map((item) => {
                 const selected = form.payment_method === item.id
                 return (
                   <label
@@ -342,7 +343,7 @@ export default function Checkout() {
             ))}
           </div>
           {remaining > 0 ? (
-            <p className="mt-4 text-xs text-muted">Add {formatRs(remaining)} more for free shipping (above {formatRs(FREE_SHIPPING_THRESHOLD)}).</p>
+            <p className="mt-4 text-xs text-muted">Add {formatRs(remaining)} more for free shipping (above {formatRs(settings.freeShippingThreshold)}).</p>
           ) : (
             <p className="mt-4 text-xs text-success">You have qualified for free shipping.</p>
           )}
@@ -363,7 +364,7 @@ export default function Checkout() {
           {formError && <p className="mt-4 text-sm text-sale">{formError}</p>}
           {method && (
             <p className="mt-3 text-xs text-muted">
-              Paying with {method.label}. Account details are placeholders until the real numbers are added.
+              Paying with {method.label}. Transfer the order total, then upload a screenshot of the payment.
             </p>
           )}
           <label className="mt-5 flex items-start gap-3 text-sm leading-relaxed">

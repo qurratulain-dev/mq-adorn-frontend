@@ -3,9 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import Accordion from '../components/Accordion.jsx'
 import PageHero from '../components/PageHero.jsx'
 import { DELIVERY_COPY, NO_RETURNS_ADVICE, NO_RETURNS_INTRO, NO_RETURNS_POINTS, shippingChargesCopy } from '../content/policies.js'
+import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
 import { WHATSAPP_DISPLAY, WHATSAPP_LINK } from '../lib/whatsapp.js'
 
 export default function Faqs() {
+  const { freeShippingThreshold, shippingFee } = useStoreSettings()
   const location = useLocation()
   const hash = location.hash.replace('#', '')
 
@@ -67,7 +69,7 @@ export default function Faqs() {
         body: (
           <div className="space-y-3">
             <p>{DELIVERY_COPY}</p>
-            <p>{shippingChargesCopy()}</p>
+            <p>{shippingChargesCopy(freeShippingThreshold, shippingFee)}</p>
           </div>
         ),
       },

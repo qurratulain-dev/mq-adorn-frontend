@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { mediaUrl } from '../lib/media.js'
 import { Link } from 'react-router-dom'
 import { BagIcon, HeartIcon } from './Icons.jsx'
 import QuickAdd from './product/QuickAdd.jsx'
@@ -38,16 +39,21 @@ export default function ProductCard({ product }) {
       <div className="relative aspect-square overflow-hidden bg-cream">
         <Link to={`/product/${product.slug}`} className="block h-full w-full">
           {image ? (
-            <img src={image} alt={product.name} className="img-zoom h-full w-full object-cover" />
+            <img src={mediaUrl(image)} alt={product.name} className="img-zoom h-full w-full object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center text-xs text-muted">No image</div>
           )}
         </Link>
-        {onSale && (
-          <span className="absolute top-3 left-3 rounded-sm bg-sale px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">
-            {percent ? `${percent}% Off` : 'Sale'}
-          </span>
-        )}
+        <div className="absolute top-3 left-3 flex flex-col gap-1">
+          {onSale && (
+            <span className="rounded-sm bg-sale px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">
+              {percent ? `${percent}% Off` : 'Sale'}
+            </span>
+          )}
+          {product.is_new && !onSale && (
+            <span className="rounded-sm bg-gold px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">New</span>
+          )}
+        </div>
         <button
           type="button"
           aria-label={loved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}

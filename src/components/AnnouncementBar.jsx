@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { SOCIAL_LINKS } from './navLinks.js'
 import { InstagramIcon, TikTokIcon, TruckIcon } from './Icons.jsx'
-import { FREE_SHIPPING_THRESHOLD } from '../config/shipping.js'
+import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
 import { formatRs } from '../lib/format.js'
 
 const ICONS = {
@@ -10,12 +10,13 @@ const ICONS = {
 }
 
 export default function AnnouncementBar() {
+  const { freeShippingThreshold } = useStoreSettings()
   return (
     <div className="bg-primary text-white">
       <div className="container-page flex items-center justify-between gap-3 py-1.5 text-[11px] sm:text-xs">
         <p className="flex min-w-0 items-center gap-2 leading-tight">
           <TruckIcon className="hidden shrink-0 text-gold sm:block" width={15} height={15} />
-          <span className="truncate">Free Shipping on Orders Above {formatRs(FREE_SHIPPING_THRESHOLD)}</span>
+          <span className="truncate">Free Shipping on Orders Above {formatRs(freeShippingThreshold)}</span>
         </p>
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           <nav className="hidden items-center gap-2 text-white/85 sm:flex" aria-label="Quick links">

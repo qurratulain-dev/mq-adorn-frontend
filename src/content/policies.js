@@ -25,6 +25,6 @@ export const NO_RETURNS_ADVICE = `Please look carefully at the product photos, d
 export const DELIVERY_COPY =
   'We deliver across Pakistan. After your payment is confirmed, we will share the delivery timeline with you on WhatsApp. We do not publish a fixed number of days, as timing can vary.'
 
-export function shippingChargesCopy() {
-  return `Shipping is free on orders above ${formatRs(FREE_SHIPPING_THRESHOLD)}. Orders under this amount have a flat shipping fee of ${formatRs(SHIPPING_FEE)}.`
+export function shippingChargesCopy(threshold = FREE_SHIPPING_THRESHOLD, fee = SHIPPING_FEE) {
+  return `Shipping is free on orders above ${formatRs(threshold)}. Orders under this amount have a flat shipping fee of ${formatRs(fee)}.`
 }
