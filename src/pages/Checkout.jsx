@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs } from '../lib/format.js'
 import { isPakistaniPhone } from '../lib/phone.js'
+import { PROVINCES } from '../lib/pakistan.js'
 import { NO_RETURNS_CHECKBOX, NO_RETURNS_SHORT } from '../content/policies.js'
 import { isMobileDevice, orderPlacedHref } from '../lib/whatsapp.js'
 
@@ -16,8 +17,13 @@ const CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'P
 const EMPTY = {
   customer_name: '',
   customer_phone: '',
+  customer_phone_alt: '',
   customer_email: '',
+  address_street: '',
+  address_area: '',
+  address_landmark: '',
   city: '',
+  province: '',
   shipping_address: '',
   notes: '',
   payment_method: '',
@@ -55,12 +61,23 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!user) return
-    setForm((current) => ({
-      ...current,
-      customer_name: current.customer_name || user.name || '',
-      customer_email: current.customer_email || user.email || '',
-      customer_phone: current.customer_phone || user.phone || '',
-    }))
+    const last = user.last_delivery || {}
+    setForm((current) => {
+      const fill = (key, ...sources) => current[key] || sources.find((value) => Boolean(value)) || ''
+      return {
+        ...current,
+        customer_name: fill('customer_name', user.name, last.customer_name),
+        customer_phone: fill('customer_phone', user.phone, last.customer_phone),
+        customer_phone_alt: fill('customer_phone_alt', last.customer_phone_alt),
+        customer_email: fill('customer_email', user.email, last.customer_email),
+        address_street: fill('address_street', last.address_street),
+        address_area: fill('address_area', last.address_area),
+        address_landmark: fill('address_landmark', last.address_landmark),
+        city: fill('city', last.city),
+        province: fill('province', last.province),
+        shipping_address: fill('shipping_address', last.shipping_address),
+      }
+    })
   }, [user])
 
 
@@ -103,15 +120,26 @@ export default function Checkout() {
 
   const validate = () => {
     const next = {}
-    if (!form.customer_name.trim()) next.customer_name = 'Please enter your full name.'
+        if (!form.customer_name.trim()) next.customer_name = 'Please enter your full name.'
     if (!form.customer_phone.trim()) next.customer_phone = 'Please enter your mobile number.'
     else if (!isPakistaniPhone(form.customer_phone)) next.customer_phone = 'Please enter a valid Pakistani mobile number, for example 03XX XXXXXXX.'
-    if (form.customer_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.customer_email)) {
-      next.customer_email = 'Please enter a valid email address, or leave this field empty.'
+    if (form.customer_phone_alt && !isPakistaniPhone(form.customer_phone_alt)) {
+      next.customer_phone_alt = 'Please enter a valid Pakistani mobile number, for example 03XX XXXXXXX.'
     }
+    if (form.customer_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.customer_email)) {
+      next.customer_email = 'Please enter a valid email address.'
+    }
+    if (!form.customer_phone_alt.trim() && !form.customer_email.trim()) {
+      const contactMessage = 'Please enter an alternate phone number or an email address — at least one is required.'
+      next.customer_phone_alt = contactMessage
+      next.customer_email = contactMessage
+    }
+    if (!form.address_street.trim()) next.address_street = 'Please enter your house, street and mohalla.'
+    if (!form.address_area.trim()) next.address_area = 'Please enter your area.'
     if (!form.city.trim()) next.city = 'Please enter your city.'
-    if (!form.shipping_address.trim()) next.shipping_address = 'Please enter your full delivery address.'
-    if (!form.payment_method) next.payment_method = 'Please choose a payment method.'
+    if (!form.province.trim()) next.province = 'Please choose your province.'
+    if (!form.shipping_address.trim()) next.shipping_address = 'Please enter your complete address.'
+if (!form.payment_method) next.payment_method = 'Please choose a payment method.'
     if (!proof) next.proof = 'Please upload a screenshot of your payment (JPG, PNG or WebP, up to 5MB).'
     if (!agreed) next.final_sale = 'Please confirm that you understand all sales are final — no returns, refunds or exchanges.'
     setErrors(next)
@@ -136,8 +164,13 @@ export default function Checkout() {
       const data = new FormData()
       data.set('customer_name', form.customer_name.trim())
       data.set('customer_phone', form.customer_phone.trim())
+      if (form.customer_phone_alt.trim()) data.set('customer_phone_alt', form.customer_phone_alt.trim())
       if (form.customer_email.trim()) data.set('customer_email', form.customer_email.trim())
+      data.set('address_street', form.address_street.trim())
+      data.set('address_area', form.address_area.trim())
+      if (form.address_landmark.trim()) data.set('address_landmark', form.address_landmark.trim())
       data.set('city', form.city.trim())
+      data.set('province', form.province.trim())
       data.set('shipping_address', form.shipping_address.trim())
       if (form.notes.trim()) data.set('notes', form.notes.trim())
       data.set('payment_method', form.payment_method)
@@ -220,9 +253,30 @@ export default function Checkout() {
                 {fieldError('customer_phone')}
               </label>
               <label>
-                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Email (optional)</span>
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Alternate phone</span>
+                <input className={fieldClass('customer_phone_alt')} value={form.customer_phone_alt} autoComplete="tel" placeholder="03XX XXXXXXX" onChange={(e) => setField('customer_phone_alt', e.target.value)} />
+                {fieldError('customer_phone_alt')}
+              </label>
+              <label className="sm:col-span-2">
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Email</span>
                 <input type="email" className={fieldClass('customer_email')} value={form.customer_email} autoComplete="email" onChange={(e) => setField('customer_email', e.target.value)} />
+                <span className="mt-1 block text-xs text-muted">Enter an alternate phone number or an email — at least one is required.</span>
                 {fieldError('customer_email')}
+              </label>
+              <label className="sm:col-span-2">
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">House / street &amp; mohalla</span>
+                <input className={fieldClass('address_street')} value={form.address_street} autoComplete="address-line1" placeholder="House no., street, gali / mohalla" onChange={(e) => setField('address_street', e.target.value)} />
+                {fieldError('address_street')}
+              </label>
+              <label>
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Area</span>
+                <input className={fieldClass('address_area')} value={form.address_area} autoComplete="address-line2" onChange={(e) => setField('address_area', e.target.value)} />
+                {fieldError('address_area')}
+              </label>
+              <label>
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Nearby landmark</span>
+                <input className={fieldClass('address_landmark')} value={form.address_landmark} placeholder="Near…" onChange={(e) => setField('address_landmark', e.target.value)} />
+                {fieldError('address_landmark')}
               </label>
               <label>
                 <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">City</span>
@@ -234,8 +288,18 @@ export default function Checkout() {
                 </datalist>
                 {fieldError('city')}
               </label>
+              <label>
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Province</span>
+                <select className={fieldClass('province')} value={form.province} autoComplete="address-level1" onChange={(e) => setField('province', e.target.value)}>
+                  <option value="">Select province</option>
+                  {PROVINCES.map((province) => (
+                    <option key={province} value={province}>{province}</option>
+                  ))}
+                </select>
+                {fieldError('province')}
+              </label>
               <label className="sm:col-span-2">
-                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Full address</span>
+                <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Complete address</span>
                 <textarea className={`${fieldClass('shipping_address')} min-h-24`} value={form.shipping_address} autoComplete="street-address" onChange={(e) => setField('shipping_address', e.target.value)} />
                 {fieldError('shipping_address')}
               </label>

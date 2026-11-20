@@ -95,6 +95,7 @@ export const getAccountOrder = (orderNumber, options = {}) => apiFetch(`/account
 export const submitReview = (orderNumber, body) => sendJson(`/account/orders/${orderNumber}/reviews`, body)
 
 export const getStoreSettings = (options = {}) => apiFetch('/settings', options)
+export const getTestimonials = (options = {}) => apiFetch('/testimonials', options)
 
 export const ADMIN_TOKEN_KEY = 'mq-adorn-admin-token'
 
@@ -183,6 +184,7 @@ export const getAdminReviews = (params = {}) => {
   const query = search.toString()
   return adminRequest(`/admin/reviews${query ? `?${query}` : ''}`)
 }
+export const updateAdminReview = (id, body) => adminRequest(`/admin/reviews/${id}`, { method: 'PUT', body })
 export const approveAdminReview = (id) => adminRequest(`/admin/reviews/${id}/approve`, { method: 'POST' })
 export const rejectAdminReview = (id) => adminRequest(`/admin/reviews/${id}/reject`, { method: 'POST' })
 export const deleteAdminReview = (id) => adminRequest(`/admin/reviews/${id}`, { method: 'DELETE' })

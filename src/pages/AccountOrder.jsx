@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { getAccountOrder, submitReview } from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { formatRs } from '../lib/format.js'
+import DeliveryAddress from '../components/DeliveryAddress.jsx'
 
 export default function AccountOrder() {
   const { orderNumber } = useParams()
@@ -14,6 +15,7 @@ export default function AccountOrder() {
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [thanks, setThanks] = useState(false)
 
   const load = (signal) =>
     getAccountOrder(orderNumber, { signal })
@@ -53,6 +55,7 @@ export default function AccountOrder() {
         comment: form.comment.trim(),
       })
       setForm((current) => ({ ...current, comment: '', rating: 5 }))
+      setThanks(true)
       await load()
     } catch (error) {
       setErrors(error.errors || {})
@@ -132,12 +135,14 @@ export default function AccountOrder() {
                 <p className="mt-3 text-sm">{order.customer_name}</p>
                 <p className="text-sm text-muted">{order.customer_phone}</p>
                 {order.customer_email && <p className="text-sm text-muted">{order.customer_email}</p>}
-                <p className="mt-2 text-sm">
-                  {order.shipping_address}
-                  <br />
-                  {order.city}
-                </p>
+                <DeliveryAddress order={order} />
               </div>
+
+              {(thanks || (order.items || []).some((item) => item.reviewed)) && (
+                <div className="border border-black/5 bg-card p-5 sm:p-6">
+                  <p className="text-sm">Thanks! Your review has been submitted.</p>
+                </div>
+              )}
 
               {order.can_review && unreviewed.length > 0 && (
                 <form className="border border-black/5 bg-card p-5 sm:p-6" onSubmit={onReview}>
@@ -188,19 +193,6 @@ export default function AccountOrder() {
                 </form>
               )}
 
-              {order.reviews?.length > 0 && (
-                <div className="border border-black/5 bg-card p-5 sm:p-6">
-                  <h2 className="font-heading text-xl">Your reviews</h2>
-                  <ul className="mt-3 space-y-3 text-sm">
-                    {order.reviews.map((review) => (
-                      <li key={review.id}>
-                        <p className="font-medium">{review.rating} / 5 {review.approved ? '' : '· Pending approval'}</p>
-                        <p className="text-muted">{review.comment}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </aside>
           </div>
         )}

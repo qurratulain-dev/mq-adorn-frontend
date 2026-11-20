@@ -5,6 +5,7 @@ import { formatRs } from '../../lib/format.js'
 import { formatDateTime } from '../../lib/datetime.js'
 import StatusBadge from '../components/StatusBadge.jsx'
 import ConfirmDialog from '../components/ConfirmDialog.jsx'
+import DeliveryAddress from '../../components/DeliveryAddress.jsx'
 
 const NEXT = {
   pending: 'confirmed',
@@ -107,7 +108,7 @@ export default function AdminOrderDetail() {
           <p className="mt-3 text-sm">{order.customer_name}</p>
           <p className="text-sm text-muted">{order.customer_phone}</p>
           {order.customer_email && <p className="text-sm text-muted">{order.customer_email}</p>}
-          <p className="mt-3 text-sm">{order.shipping_address}<br />{order.city}</p>
+          <DeliveryAddress order={order} />
           {order.notes && <p className="mt-3 text-sm text-muted">Note: {order.notes}</p>}
           {order.whatsapp_url && (
             <a href={order.whatsapp_url} target="_blank" rel="noopener noreferrer" className="btn-primary mt-4 w-full px-4 py-2 text-xs">WhatsApp the customer</a>
