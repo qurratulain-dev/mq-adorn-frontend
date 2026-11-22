@@ -60,9 +60,9 @@ function useVisibleCount() {
 
 function TestimonialCard({ item }) {
   return (
-    <article className="flex h-full gap-4 rounded-lg bg-white px-6 py-4 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
+    <article className="flex h-full gap-3 rounded-lg bg-white px-4 py-4 shadow-[0_0_10px_rgba(0,0,0,0.15)] sm:gap-4 sm:px-6">
       <div
-        className="flex h-20 w-20 shrink-0 items-center justify-center self-center rounded-full bg-blush font-heading text-xl text-gold"
+        className="flex h-16 w-16 shrink-0 items-center justify-center self-center rounded-full bg-blush font-heading text-lg text-gold sm:h-20 sm:w-20 sm:text-xl"
         aria-hidden="true"
       >
         {initials(item.customer_name)}
@@ -70,13 +70,13 @@ function TestimonialCard({ item }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <Stars rating={item.rating} />
-          <p className="truncate text-sm font-bold leading-[17px]">{item.customer_name}</p>
+          <p className="min-w-0 text-sm font-bold leading-[17px]">{item.customer_name}</p>
         </div>
         {item.comment ? (
           <p className="mt-2 line-clamp-3 text-sm leading-[21px] font-normal text-primary">{item.comment}</p>
         ) : null}
         {item.product?.name ? (
-          <p className="mt-2 truncate text-[13px]">
+          <p className="mt-2 text-[13px]">
             <span className="text-muted">Review for </span>
             {item.product.slug ? (
               <Link to={`/product/${item.product.slug}`} className="text-primary hover:text-gold">
@@ -154,7 +154,7 @@ export default function Testimonials() {
         </div>
 
         <div
-          className="relative mt-8 px-8 sm:px-10"
+          className={`relative mt-8 ${canSlide ? "px-8 sm:px-10" : ""}`}
           onTouchStart={(event) => { touchX.current = event.touches[0].clientX }}
           onTouchEnd={(event) => {
             const delta = event.changedTouches[0].clientX - touchX.current
