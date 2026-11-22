@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { createAdminProduct, deleteAdminProductImage, getAdminCategories, getAdminProduct, updateAdminProduct, uploadAdminProductImages } from '../../api/client.js'
 import { mediaUrl } from '../../lib/media.js'
+import { OCCASIONS } from '../../lib/occasions.js'
 
 const emptyVariant = () => ({ color: '', size: '', stock: 0, sku: '', price: '' })
 
@@ -19,6 +20,7 @@ const emptyForm = {
   is_active: true,
   variants: [emptyVariant()],
   images: [],
+  occasions: [],
 }
 
 function firstError(errors) {
@@ -62,6 +64,7 @@ export default function AdminProductEdit() {
           is_active: product.is_active !== false,
           variants: (product.variants || []).length ? product.variants.map((v) => ({ id: v.id, color: v.color || '', size: v.size || '', stock: v.stock ?? 0, sku: v.sku || '', price: v.price ?? '' })) : [emptyVariant()],
           images: product.images || [],
+          occasions: (product.occasions || []).map((item) => item.slug || item),
         })
       })
       .catch((err) => setError(err.message || 'This product could not be loaded.'))
@@ -92,6 +95,7 @@ export default function AdminProductEdit() {
         stock: Number(row.stock) || 0,
       })),
     images: form.images,
+    occasions: form.occasions,
   })
 
   const save = async (event) => {
@@ -220,16 +224,41 @@ export default function AdminProductEdit() {
       <div className="mt-5 flex flex-wrap gap-4 text-sm">
         {[
           ['is_featured', 'Featured'],
-          ['is_best_seller', 'Best seller'],
+          ['is_best_seller', 'Best Seller'],
           ['is_new', 'New'],
           ['is_active', 'Active'],
         ].map(([key, label]) => (
           <label key={key} className="inline-flex items-center gap-2">
-            <input type="checkbox" checked={form[key]} onChange={(e) => field(key, e.target.checked)} />
+            <input type="checkbox" checked={form[key]} onChange={(e) => field(key, e.target.checked)} data-testid={key === 'is_best_seller' ? 'best-seller-toggle' : undefined} />
             {label}
           </label>
         ))}
       </div>
+
+      <fieldset className="mt-6">
+        <legend className="mb-2 text-xs tracking-wide text-muted uppercase">Occasions</legend>
+        <p className="mb-3 text-xs text-muted">Tag this product so it appears on Shop by Occasion pages.</p>
+        <div className="flex flex-wrap gap-4 text-sm">
+          {OCCASIONS.map((item) => {
+            const checked = form.occasions.includes(item.slug)
+            return (
+              <label key={item.slug} className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) => {
+                    const next = e.target.checked
+                      ? [...form.occasions, item.slug]
+                      : form.occasions.filter((slug) => slug !== item.slug)
+                    field('occasions', next)
+                  }}
+                />
+                {item.name}
+              </label>
+            )
+          })}
+        </div>
+      </fieldset>
 
       <section className="mt-8">
         <h2 className="font-heading text-xl">Photos</h2>

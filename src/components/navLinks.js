@@ -35,6 +35,7 @@ export const DRESSES_LINKS = [
 
 export const NAV_LINKS = [
   { label: 'New In', to: '/shop?sort=new' },
+  { label: 'Best Selling', to: '/best-selling' },
   { label: 'Jewellery', to: '/shop?category=jewellery', children: JEWELLERY_LINKS },
   { label: 'Dresses', to: '/shop?category=dresses', children: DRESSES_LINKS },
   { label: 'Collections', to: '/shop?view=collections' },

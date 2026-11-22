@@ -17,6 +17,7 @@ const COLUMNS = [
     title: 'Shop',
     links: [
       ['New In', '/shop?sort=new'],
+      ['Best Selling', '/best-selling'],
       ['Jewellery', '/shop?category=jewellery'],
       ['Earrings', '/shop?category=jewellery&sub=earrings'],
       ['Necklaces', '/shop?category=jewellery&sub=necklaces'],

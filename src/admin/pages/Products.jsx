@@ -18,7 +18,7 @@ export default function AdminProducts() {
 
   useEffect(() => { load() }, [applied, page])
 
-  const toggleActive = async (product) => {
+  const toggleFlag = async (product, key) => {
     try {
       await updateAdminProduct(product.id, {
         name: product.name,
@@ -26,10 +26,12 @@ export default function AdminProducts() {
         category_id: product.category_id,
         price: product.price,
         sale_price: product.sale_price,
-        is_active: !product.is_active,
+        is_active: product.is_active,
         is_featured: product.is_featured,
         is_best_seller: product.is_best_seller,
         is_new: product.is_new,
+        occasions: (product.occasions || []).map((item) => item.slug || item),
+        [key]: !product[key],
       })
       load()
     } catch (err) {
@@ -60,12 +62,13 @@ export default function AdminProducts() {
               <th className="px-4 py-3">Price</th>
               <th className="px-4 py-3">Stock</th>
               <th className="px-4 py-3">Active</th>
+              <th className="px-4 py-3">Best Seller</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
           <tbody>
             {!(data?.data || []).length && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-muted">No products found.</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-muted">No products found.</td></tr>
             )}
             {(data?.data || []).map((product) => (
               <tr key={product.id} className="border-t border-black/5">
@@ -82,9 +85,20 @@ export default function AdminProducts() {
                 <td className="px-4 py-3">{product.sale_price ? formatRs(product.sale_price) : formatRs(product.price)}</td>
                 <td className="px-4 py-3">{product.stock}</td>
                 <td className="px-4 py-3">
-                  <button type="button" className="text-xs underline decoration-gold underline-offset-2" onClick={() => toggleActive(product)}>
+                  <button type="button" className="text-xs underline decoration-gold underline-offset-2" onClick={() => toggleFlag(product, 'is_active')}>
                     {product.is_active ? 'Active' : 'Hidden'}
                   </button>
+                </td>
+                <td className="px-4 py-3">
+                  <label className="inline-flex items-center gap-2 text-xs">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(product.is_best_seller)}
+                      onChange={() => toggleFlag(product, 'is_best_seller')}
+                      aria-label={`Best Seller: ${product.name}`}
+                    />
+                    Best Seller
+                  </label>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link to={`/admin/products/${product.id}`} className="text-xs underline decoration-gold underline-offset-2 hover:text-gold">Edit</Link>
