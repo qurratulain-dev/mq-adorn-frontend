@@ -6,7 +6,7 @@ import Reveal from './Reveal.jsx'
 
 function Stars({ rating }) {
   return (
-    <p className="text-lg tracking-widest text-gold" aria-label={`${rating} out of 5 stars`}>
+    <p className="shrink-0 text-[14px] leading-none tracking-wide text-gold" aria-label={`${rating} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, index) => (
         <span key={index} className={index < rating ? 'text-gold' : 'text-black/15'}>
           ★
@@ -14,6 +14,17 @@ function Stars({ rating }) {
       ))}
     </p>
   )
+}
+
+function initials(name) {
+  const parts = String(name || '')
+    .replace(/\./g, '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+  if (parts.length === 0) return 'C'
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
 }
 
 function usePrefersReducedMotion() {
@@ -30,11 +41,63 @@ function usePrefersReducedMotion() {
   return reduced
 }
 
+function useVisibleCount() {
+  const [visible, setVisible] = useState(1)
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth >= 1024) setVisible(3)
+      else if (window.innerWidth >= 768) setVisible(2)
+      else setVisible(1)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  return visible
+}
+
+function TestimonialCard({ item }) {
+  return (
+    <article className="flex h-full gap-4 rounded-lg bg-white px-6 py-4 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
+      <div
+        className="flex h-20 w-20 shrink-0 items-center justify-center self-center rounded-full bg-blush font-heading text-xl text-gold"
+        aria-hidden="true"
+      >
+        {initials(item.customer_name)}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-2">
+          <Stars rating={item.rating} />
+          <p className="truncate text-sm font-bold leading-[17px]">{item.customer_name}</p>
+        </div>
+        {item.comment ? (
+          <p className="mt-2 line-clamp-3 text-sm leading-[21px] font-normal text-primary">{item.comment}</p>
+        ) : null}
+        {item.product?.name ? (
+          <p className="mt-2 truncate text-[13px]">
+            <span className="text-muted">Review for </span>
+            {item.product.slug ? (
+              <Link to={`/product/${item.product.slug}`} className="text-primary hover:text-gold">
+                {item.product.name}
+              </Link>
+            ) : (
+              <span>{item.product.name}</span>
+            )}
+          </p>
+        ) : null}
+      </div>
+    </article>
+  )
+}
+
 export default function Testimonials() {
   const [items, setItems] = useState(null)
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const reduced = usePrefersReducedMotion()
+  const visible = useVisibleCount()
   const touchX = useRef(0)
 
   useEffect(() => {
@@ -46,36 +109,52 @@ export default function Testimonials() {
   }, [])
 
   const count = items?.length || 0
-  const go = useCallback((step) => {
-    if (!count) return
-    setIndex((current) => (current + step + count) % count)
-  }, [count])
+  const canSlide = count > visible
+  const maxIndex = Math.max(0, count - visible)
 
   useEffect(() => {
-    if (count <= 1 || paused || reduced) return undefined
-    const timer = setInterval(() => go(1), 5500)
+    setIndex((current) => Math.min(current, maxIndex))
+  }, [maxIndex])
+
+  const go = useCallback((step) => {
+    if (!canSlide) return
+    setIndex((current) => {
+      const next = current + step
+      if (next < 0) return maxIndex
+      if (next > maxIndex) return 0
+      return next
+    })
+  }, [canSlide, maxIndex])
+
+  useEffect(() => {
+    if (!canSlide || paused || reduced) return undefined
+    const timer = setInterval(() => go(1), 5000)
     return () => clearInterval(timer)
-  }, [count, paused, reduced, go])
+  }, [canSlide, paused, reduced, go])
 
   if (!items || items.length === 0) return null
+
+  const slidePercent = 100 / visible
 
   return (
     <Reveal
       as="section"
-      className="bg-blush/50"
+      className="bg-white"
       aria-labelledby="testimonials-heading"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="container-page py-10 sm:py-14">
-        <p className="text-xs tracking-[0.22em] text-muted uppercase">Testimonials</p>
-        <h2 id="testimonials-heading" className="mt-2 font-heading text-3xl font-medium sm:text-4xl">
-          What Our Customers Say
-        </h2>
+      <div className="container-page py-12 sm:py-16">
+        <div className="text-center">
+          <p className="text-xs tracking-[0.22em] text-muted uppercase">Testimonials</p>
+          <h2 id="testimonials-heading" className="mt-2 font-heading text-[28px] font-normal sm:text-[34px]">
+            What Our Customers Say
+          </h2>
+        </div>
 
         <div
-          className="relative mt-8"
+          className="relative mt-8 px-8 sm:px-10"
           onTouchStart={(event) => { touchX.current = event.touches[0].clientX }}
           onTouchEnd={(event) => {
             const delta = event.changedTouches[0].clientX - touchX.current
@@ -84,59 +163,43 @@ export default function Testimonials() {
         >
           <div className="overflow-hidden">
             <div
-              className={`flex ${reduced ? '' : 'transition-transform duration-500 ease-out'}`}
-              style={{ transform: `translateX(-${index * 100}%)` }}
+              className={`flex items-stretch ${reduced ? '' : 'transition-transform duration-500 ease-out'}`}
+              style={{
+                transform: `translateX(-${index * slidePercent}%)`,
+                justifyContent: canSlide || count >= visible ? undefined : 'center',
+              }}
             >
               {items.map((item) => (
-                <article key={item.id} className="w-full shrink-0 px-1" aria-hidden={item !== items[index]}>
-                  <div className="mx-auto max-w-2xl border border-black/5 bg-card px-6 py-8 text-center sm:px-10">
-                    <Stars rating={item.rating} />
-                    <p className="mt-4 font-heading text-xl leading-relaxed sm:text-2xl">“{item.comment}”</p>
-                    <p className="mt-6 text-sm font-medium">{item.customer_name}</p>
-                    {item.product?.slug ? (
-                      <Link to={`/product/${item.product.slug}`} className="mt-1 inline-block text-sm text-muted hover:text-gold">
-                        {item.product.name}
-                      </Link>
-                    ) : item.product?.name ? (
-                      <p className="mt-1 text-sm text-muted">{item.product.name}</p>
-                    ) : null}
-                  </div>
-                </article>
+                <div
+                  key={item.id}
+                  className="shrink-0 px-2.5"
+                  style={{ width: `${slidePercent}%`, maxWidth: count < visible ? `${slidePercent}%` : undefined }}
+                  aria-hidden={false}
+                >
+                  <TestimonialCard item={item} />
+                </div>
               ))}
             </div>
           </div>
 
-          {count > 1 && (
+          {canSlide && (
             <>
               <button
                 type="button"
-                aria-label="Previous testimonial"
-                className="absolute top-1/2 left-0 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-black/10 bg-white/90 text-primary hover:border-gold hover:text-gold sm:-left-2"
+                aria-label="Previous testimonials"
+                className="absolute top-1/2 left-0 z-10 flex h-[26px] w-[26px] -translate-y-1/2 items-center justify-center rounded-full bg-white text-primary shadow-[0_0_10px_rgba(0,0,0,0.15)] hover:text-gold"
                 onClick={() => go(-1)}
               >
-                <ChevronLeftIcon width={18} height={18} />
+                <ChevronLeftIcon width={14} height={14} />
               </button>
               <button
                 type="button"
-                aria-label="Next testimonial"
-                className="absolute top-1/2 right-0 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-black/10 bg-white/90 text-primary hover:border-gold hover:text-gold sm:-right-2"
+                aria-label="Next testimonials"
+                className="absolute top-1/2 right-0 z-10 flex h-[26px] w-[26px] -translate-y-1/2 items-center justify-center rounded-full bg-white text-primary shadow-[0_0_10px_rgba(0,0,0,0.15)] hover:text-gold"
                 onClick={() => go(1)}
               >
-                <ChevronRightIcon width={18} height={18} />
+                <ChevronRightIcon width={14} height={14} />
               </button>
-              <div className="mt-5 flex justify-center gap-2" role="tablist" aria-label="Testimonials">
-                {items.map((item, itemIndex) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="tab"
-                    aria-label={`Show testimonial ${itemIndex + 1}`}
-                    aria-selected={itemIndex === index}
-                    className={`h-2.5 w-2.5 rounded-full ${itemIndex === index ? 'bg-gold' : 'bg-black/20'}`}
-                    onClick={() => setIndex(itemIndex)}
-                  />
-                ))}
-              </div>
             </>
           )}
         </div>
