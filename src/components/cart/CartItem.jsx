@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { mediaUrl } from '../../lib/media.js'
-import { useCart } from '../../context/CartContext.jsx'
+import { cartLineIssue, useCart } from '../../context/CartContext.jsx'
 import { formatRs } from '../../lib/format.js'
 import { CloseIcon, MinusIcon, PlusIcon } from '../Icons.jsx'
 
@@ -8,9 +8,10 @@ export default function CartItem({ item, compact = false, onNavigate }) {
   const { updateQuantity, removeItem } = useCart()
   const qty = item.quantity || 1
   const meta = [item.color, item.size].filter(Boolean).join(' · ')
+  const issue = cartLineIssue(item)
 
   return (
-    <article className={`flex gap-3 ${compact ? 'py-3' : 'gap-4 border-b border-black/5 py-5'}`}>
+    <article className={`flex gap-3 ${compact ? 'py-3' : 'gap-4 border-b border-black/5 py-5'} ${item.unavailable ? 'opacity-70' : ''}`}>
       <Link
         to={`/product/${item.slug}`}
         onClick={onNavigate}
@@ -42,6 +43,10 @@ export default function CartItem({ item, compact = false, onNavigate }) {
                 formatRs(item.price)
               )}
             </p>
+            {item.price_notice && (
+              <p className="mt-1 text-xs text-gold">{item.price_notice}</p>
+            )}
+            {issue && <p className="mt-1 text-xs text-sale">{issue}</p>}
           </div>
           <button
             type="button"
@@ -57,7 +62,7 @@ export default function CartItem({ item, compact = false, onNavigate }) {
             type="button"
             aria-label="Decrease quantity"
             className="px-2 py-1.5 disabled:opacity-40"
-            disabled={qty <= 1}
+            disabled={qty <= 1 || item.unavailable}
             onClick={() => updateQuantity(item.slug, item.color, item.size, qty - 1)}
           >
             <MinusIcon width={14} height={14} />
@@ -66,7 +71,8 @@ export default function CartItem({ item, compact = false, onNavigate }) {
           <button
             type="button"
             aria-label="Increase quantity"
-            className="px-2 py-1.5"
+            className="px-2 py-1.5 disabled:opacity-40"
+            disabled={item.unavailable || (item.stock != null && qty >= item.stock)}
             onClick={() => updateQuantity(item.slug, item.color, item.size, qty + 1)}
           >
             <PlusIcon width={14} height={14} />

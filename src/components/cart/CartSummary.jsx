@@ -5,7 +5,7 @@ import { formatRs } from '../../lib/format.js'
 
 export default function CartSummary({ onNavigate, checkoutTo = '/checkout' }) {
   const { freeShippingThreshold, remainingForFreeShipping } = useStoreSettings()
-  const { items, subtotal, shippingFee, total, closeCart } = useCart()
+  const { items, subtotal, shippingFee, total, closeCart, hasBlockingIssue } = useCart()
   const remaining = remainingForFreeShipping(subtotal)
   const go = () => {
     closeCart()
@@ -35,10 +35,19 @@ export default function CartSummary({ onNavigate, checkoutTo = '/checkout' }) {
           <dd>{formatRs(total)}</dd>
         </div>
       </dl>
+      {hasBlockingIssue && (
+        <p className="mt-3 text-xs text-sale">Please update or remove the unavailable items in your bag before checkout.</p>
+      )}
       <Link
         to={checkoutTo}
-        onClick={go}
-        className={`btn-primary mt-5 w-full ${items.length === 0 ? 'pointer-events-none opacity-50' : ''}`}
+        onClick={(event) => {
+          if (items.length === 0 || hasBlockingIssue) {
+            event.preventDefault()
+            return
+          }
+          go()
+        }}
+        className={`btn-primary mt-5 w-full ${items.length === 0 || hasBlockingIssue ? 'pointer-events-none opacity-50' : ''}`}
       >
         Checkout
       </Link>

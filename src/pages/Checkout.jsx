@@ -48,7 +48,7 @@ function firstError(errors) {
 export default function Checkout() {
   const settings = useStoreSettings()
   const navigate = useNavigate()
-  const { items, subtotal, shippingFee, total, clearCart } = useCart()
+  const { items, subtotal, shippingFee, total, clearCart, hasBlockingIssue } = useCart()
   const { user } = useAuth()
   const [form, setForm] = useState(EMPTY)
   const [proof, setProof] = useState(null)
@@ -149,6 +149,10 @@ if (!form.payment_method) next.payment_method = 'Please choose a payment method.
   const submit = async (event) => {
     event.preventDefault()
     setFormError('')
+    if (hasBlockingIssue) {
+      setFormError('Please update or remove the unavailable items in your bag before placing the order.')
+      return
+    }
     if (!validate()) return
 
     // Open the tab now, while we still have the user click. After the API
@@ -455,7 +459,10 @@ if (!form.payment_method) next.payment_method = 'Please choose a payment method.
           </label>
           {errors.final_sale && <p className="mt-2 text-xs text-sale">{errors.final_sale}</p>}
           <p className="mt-3 text-[11px] text-muted">{NO_RETURNS_SHORT}</p>
-          <button type="submit" className="btn-primary mt-4 w-full" disabled={submitting}>
+          {hasBlockingIssue && (
+            <p className="mt-4 text-sm text-sale">Please update or remove the unavailable items in your bag before placing the order.</p>
+          )}
+          <button type="submit" className="btn-primary mt-4 w-full" disabled={submitting || hasBlockingIssue}>
             {submitting ? 'Placing order…' : 'Place order'}
           </button>
           <Link to="/cart" className="mt-3 block text-center text-sm hover:text-gold">

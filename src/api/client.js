@@ -49,6 +49,13 @@ export const getProducts = (params = {}, options = {}) => {
 }
 export const getProduct = (slug, options = {}) => apiFetch(`/products/${slug}`, options)
 export const getCurrentDeal = (options = {}) => apiFetch('/deals/current', options)
+export const quoteCartPrices = (items, options = {}) =>
+  apiFetch('/cart/prices', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    body: JSON.stringify({ items }),
+    signal: options.signal,
+  })
 
 export async function createOrder(formData, options = {}) {
   const res = await fetch(`${API_URL}/orders`, {
