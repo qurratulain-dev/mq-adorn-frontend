@@ -1,6 +1,12 @@
 import { useState } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { SESSION_EXPIRED_MESSAGE } from '../../api/client.js'
 import { useAdminAuth } from '../../context/AdminAuthContext.jsx'
+
+function safeNext(value, fallback) {
+  if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return fallback
+  return value
+}
 
 function firstError(errors) {
   if (!errors) return ''
@@ -12,7 +18,9 @@ export default function AdminLogin() {
   const { isLoggedIn, loading, login } = useAdminAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const next = location.state?.from || '/admin'
+  const [params] = useSearchParams()
+  const expired = params.get('expired') === '1' || Boolean(location.state?.sessionExpired)
+  const next = safeNext(location.state?.from || params.get('from'), '/admin')
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -43,6 +51,11 @@ export default function AdminLogin() {
         <p className="text-xs tracking-[0.22em] text-muted uppercase">MQ Adorn</p>
         <h1 className="mt-2 font-heading text-3xl">Admin login</h1>
         <p className="mt-2 text-sm text-muted">This area is only for the shop owner.</p>
+        {expired && (
+          <p className="mt-4 border border-gold/40 bg-blush/70 px-3 py-2.5 text-sm text-primary">
+            {SESSION_EXPIRED_MESSAGE}
+          </p>
+        )}
         <label className="mt-6 block">
           <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Email</span>
           <input type="email" autoComplete="username" className="w-full border border-black/15 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />

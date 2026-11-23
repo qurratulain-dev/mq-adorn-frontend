@@ -1,6 +1,12 @@
 import { useState } from 'react'
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { SESSION_EXPIRED_MESSAGE } from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
+
+function safeNext(value, fallback) {
+  if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return fallback
+  return value
+}
 function firstError(errors) {
   if (!errors) return ''
   const value = Object.values(errors)[0]
@@ -11,7 +17,9 @@ export default function Login() {
   const { isLoggedIn, login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const next = location.state?.from || '/account'
+  const [params] = useSearchParams()
+  const expired = params.get('expired') === '1' || Boolean(location.state?.sessionExpired)
+  const next = safeNext(location.state?.from || params.get('from'), '/account')
   const [form, setForm] = useState({ email: '', password: '' })
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
@@ -52,6 +60,11 @@ export default function Login() {
       </header>
       <div className="container-page py-10 sm:py-14">
         <form className="mx-auto max-w-md border border-black/5 bg-card p-6 sm:p-8" onSubmit={submit} noValidate>
+          {expired && (
+            <p className="mb-5 border border-gold/40 bg-blush/70 px-3 py-2.5 text-sm text-primary">
+              {SESSION_EXPIRED_MESSAGE}
+            </p>
+          )}
           <label className="block">
             <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Email</span>
             <input type="email" autoComplete="email" className={fieldClass('email')} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />

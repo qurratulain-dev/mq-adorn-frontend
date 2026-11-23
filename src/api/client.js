@@ -8,6 +8,7 @@ function resolveApiUrl() {
 export const API_URL = resolveApiUrl()
 
 export const AUTH_TOKEN_KEY = 'mq-adorn-token'
+export const SESSION_EXPIRED_MESSAGE = 'Your session expired, please log in again'
 
 export function getAuthToken() {
   try {
@@ -22,6 +23,33 @@ export function authHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+function currentPath() {
+  if (typeof window === 'undefined') return ''
+  return `${window.location.pathname}${window.location.search}`
+}
+
+function alreadyOnLogin(kind) {
+  const path = typeof window === 'undefined' ? '' : window.location.pathname
+  return kind === 'admin'
+    ? path === '/admin/login' || path.startsWith('/admin/login/')
+    : path === '/login'
+}
+
+export function handleExpiredSession(kind) {
+  const tokenKey = kind === 'admin' ? ADMIN_TOKEN_KEY : AUTH_TOKEN_KEY
+  try {
+    localStorage.removeItem(tokenKey)
+  } catch {
+    /* ignore */
+  }
+  if (typeof window === 'undefined' || alreadyOnLogin(kind)) return
+  const loginPath = kind === 'admin' ? '/admin/login' : '/login'
+  const from = currentPath()
+  const params = new URLSearchParams({ expired: '1' })
+  if (from && from !== loginPath) params.set('from', from)
+  window.location.assign(`${loginPath}?${params.toString()}`)
+}
+
 export async function apiFetch(path, options = {}) {
   const { headers: optionHeaders, ...rest } = options
   const res = await fetch(`${API_URL}${path}`, {
@@ -29,6 +57,9 @@ export async function apiFetch(path, options = {}) {
     ...rest,
   })
   if (!res.ok) {
+    if (res.status === 401 && (getAuthToken() || optionHeaders?.Authorization)) {
+      handleExpiredSession('customer')
+    }
     const error = new Error(`API ${res.status}: ${res.statusText}`)
     error.status = res.status
     throw error
@@ -66,6 +97,9 @@ export async function createOrder(formData, options = {}) {
   })
   const payload = await res.json().catch(() => ({}))
   if (!res.ok) {
+    if (res.status === 401 && (getAuthToken() || options.headers?.Authorization)) {
+      handleExpiredSession('customer')
+    }
     const error = new Error(payload.message || `API ${res.status}: ${res.statusText}`)
     error.status = res.status
     error.errors = payload.errors
@@ -78,13 +112,17 @@ export async function createOrder(formData, options = {}) {
 export const getOrder = (orderNumber, options = {}) => apiFetch(`/orders/${orderNumber}`, options)
 
 async function sendJson(path, body, method = 'POST') {
+  const headers = { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() }
   const res = await fetch(`${API_URL}${path}`, {
     method,
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },
+    headers,
     body: body ? JSON.stringify(body) : undefined,
   })
   const payload = await res.json().catch(() => ({}))
   if (!res.ok) {
+    if (res.status === 401 && headers.Authorization) {
+      handleExpiredSession('customer')
+    }
     const error = new Error(payload.message || `API ${res.status}: ${res.statusText}`)
     error.status = res.status
     error.errors = payload.errors
@@ -136,6 +174,9 @@ async function adminRequest(path, { method = 'GET', body, headers, formData } = 
   })
   const payload = await res.json().catch(() => ({}))
   if (!res.ok) {
+    if (res.status === 401 && adminHeaders().Authorization) {
+      handleExpiredSession('admin')
+    }
     const error = new Error(payload.message || `API ${res.status}: ${res.statusText}`)
     error.status = res.status
     error.errors = payload.errors
