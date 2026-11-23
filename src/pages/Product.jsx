@@ -6,7 +6,8 @@ import ProductGallery from '../components/product/ProductGallery.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { BagIcon, HeartIcon, MinusIcon, PlusIcon, WhatsAppIcon } from '../components/Icons.jsx'
 import { useCart } from '../context/CartContext.jsx'
-import { formatRs, salePercent } from '../lib/format.js'
+import { formatRs } from '../lib/format.js'
+import { productPricing } from '../lib/pricing.js'
 import { availableStock, colorHex, firstAvailableSelection, findVariant, uniqueValues } from '../lib/product.js'
 import { shopPath } from '../lib/shopParams.js'
 import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
@@ -212,10 +213,9 @@ export default function Product() {
   const variant = useMemo(() => findVariant(product?.variants, color, size), [product, color, size])
   const stock = product ? availableStock(product, variant) : 0
   const inStock = stock > 0
-  const onSale = Boolean(product?.sale_price)
-  const unitPrice = variant?.price || product?.sale_price || product?.price
-  const comparePrice = onSale ? product?.price : null
-  const percent = product ? salePercent(product.price, product.sale_price) : null
+  const pricing = product ? productPricing(product, variant) : { current: 0, compare: null, isDeal: false, badge: null }
+  const unitPrice = pricing.current
+  const comparePrice = pricing.compare
   const loved = product ? isWishlisted(product.slug) : false
   const productUrl = typeof window !== 'undefined' ? `${window.location.origin}/product/${slug}` : `/product/${slug}`
 
@@ -225,7 +225,7 @@ export default function Product() {
 
   const add = () => {
     if (!product || !inStock) return
-    addToCart(product, { quantity, color: color || null, size: size || null, price: unitPrice })
+    addToCart(product, { quantity, color: color || null, size: size || null, price: unitPrice, compare_price: comparePrice, is_deal: pricing.isDeal })
     setAdded(true)
     window.setTimeout(() => setAdded(false), 2500)
   }
@@ -275,7 +275,7 @@ export default function Product() {
           <ProductGallery
             images={product.images}
             name={product.name}
-            badge={onSale ? (percent ? `${percent}% Off` : 'Sale') : null}
+            badge={pricing.badge}
           />
 
           <div>
@@ -284,10 +284,13 @@ export default function Product() {
             )}
             <h1 className="mt-2 font-heading text-3xl font-medium sm:text-4xl">{product.name}</h1>
             <p className="mt-4 text-lg">
-              {onSale ? (
+              {comparePrice ? (
                 <>
                   <span className="font-medium text-sale">{formatRs(unitPrice)}</span>{' '}
                   <s className="text-base text-muted">{formatRs(comparePrice)}</s>
+                  {pricing.isDeal && (
+                    <span className="ml-2 align-middle rounded-sm bg-sale px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">Deal</span>
+                  )}
                 </>
               ) : (
                 <span className="font-medium">{formatRs(unitPrice)}</span>

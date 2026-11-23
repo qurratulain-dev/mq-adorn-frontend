@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 import { BagIcon, HeartIcon } from './Icons.jsx'
 import QuickAdd from './product/QuickAdd.jsx'
 import { useCart } from '../context/CartContext.jsx'
-import { formatRs, salePercent } from '../lib/format.js'
+import { formatRs } from '../lib/format.js'
+import { productPricing } from '../lib/pricing.js'
 import { addToCartStrategy, lineFromVariant } from '../lib/product.js'
 
 export default function ProductCard({ product }) {
@@ -12,8 +13,7 @@ export default function ProductCard({ product }) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const [notice, setNotice] = useState('')
   const image = product.images?.[0]
-  const onSale = Boolean(product.sale_price)
-  const percent = salePercent(product.price, product.sale_price)
+  const pricing = productPricing(product)
   const loved = isWishlisted(product.slug)
 
   const onAdd = () => {
@@ -45,12 +45,12 @@ export default function ProductCard({ product }) {
           )}
         </Link>
         <div className="absolute top-3 left-3 flex flex-col gap-1">
-          {onSale && (
+          {pricing.badge && (
             <span className="rounded-sm bg-sale px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">
-              {percent ? `${percent}% Off` : 'Sale'}
+              {pricing.badge}
             </span>
           )}
-          {product.is_new && !onSale && (
+          {product.is_new && !pricing.badge && (
             <span className="rounded-sm bg-gold px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">New</span>
           )}
         </div>
@@ -69,13 +69,13 @@ export default function ProductCard({ product }) {
           {product.name}
         </Link>
         <p className="mt-1.5 text-sm">
-          {onSale ? (
+          {pricing.compare ? (
             <>
-              <span className="font-medium text-sale">{formatRs(product.sale_price)}</span>{' '}
-              <s className="text-muted">{formatRs(product.price)}</s>
+              <span className="font-medium text-sale">{formatRs(pricing.current)}</span>{' '}
+              <s className="text-muted">{formatRs(pricing.compare)}</s>
             </>
           ) : (
-            <span className="font-medium">{formatRs(product.price)}</span>
+            <span className="font-medium">{formatRs(pricing.current)}</span>
           )}
         </p>
         <button type="button" className="btn-primary mt-3 w-full px-4 py-2.5 text-xs" onClick={onAdd}>

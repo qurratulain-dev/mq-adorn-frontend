@@ -13,11 +13,11 @@ export default function BestSellers() {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 60000)
 
-    getProducts({ sort: 'best_selling', per_page: 8 }, { signal: controller.signal })
+    getProducts({ best_sellers: 1, sort: 'best_selling', per_page: 16 }, { signal: controller.signal })
       .then((payload) => {
         const list = Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : []
         const featured = list.filter((item) => item.is_best_seller)
-        setProducts((featured.length >= 4 ? featured : [...featured, ...list]).slice(0, 4))
+        setProducts((featured.length >= 8 ? featured : [...featured, ...list]).slice(0, 8))
         setStatus('ready')
       })
       .catch(() => setStatus('error'))
@@ -36,14 +36,14 @@ export default function BestSellers() {
           <h2 id="best-sellers-heading" className="font-heading text-3xl font-medium sm:text-4xl">
             Best Sellers
           </h2>
-          <Link to="/shop" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-gold">
+          <Link to="/best-selling" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-gold">
             View All <ArrowRightIcon />
           </Link>
         </div>
 
         {status === 'loading' && (
           <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-            {Array.from({ length: 4 }, (_, i) => (
+            {Array.from({ length: 8 }, (_, i) => (
               <ProductCardSkeleton key={i} />
             ))}
           </div>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useStoreSettings } from './StoreSettingsContext.jsx'
+import { productPricing } from '../lib/pricing.js'
 
 const CartContext = createContext(null)
 const CART_KEY = 'mq-adorn-cart'
@@ -65,7 +66,9 @@ export function CartProvider({ children }) {
               {
                 slug: product.slug,
                 name: product.name,
-                price: options.price || product.sale_price || product.price,
+                price: options.price || productPricing(product).current,
+                compare_price: options.compare_price ?? productPricing(product).compare,
+                is_deal: options.is_deal ?? productPricing(product).isDeal,
                 image: product.images?.[0],
                 quantity,
                 color,

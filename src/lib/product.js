@@ -1,3 +1,5 @@
+import { productPricing } from './pricing.js'
+
 export function uniqueValues(variants, key) {
   return [...new Set((variants || []).map((item) => item[key]).filter(Boolean))]
 }
@@ -69,9 +71,12 @@ export function addToCartStrategy(product) {
 }
 
 export function lineFromVariant(product, variant) {
+  const pricing = productPricing(product, variant)
   return {
     color: variant?.color || null,
     size: variant?.size || null,
-    price: variant?.price || product.sale_price || product.price,
+    price: pricing.current,
+    compare_price: pricing.compare,
+    is_deal: pricing.isDeal,
   }
 }

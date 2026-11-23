@@ -29,7 +29,19 @@ export default function CartItem({ item, compact = false, onNavigate }) {
               {item.name}
             </Link>
             {meta && <p className="mt-0.5 text-xs text-muted">{meta}</p>}
-            <p className="mt-1 text-sm">{formatRs(item.price)}</p>
+            <p className="mt-1 text-sm">
+              {item.compare_price && Number(item.compare_price) > Number(item.price) ? (
+                <>
+                  <span className="font-medium text-sale">{formatRs(item.price)}</span>{' '}
+                  <s className="text-muted">{formatRs(item.compare_price)}</s>
+                  {item.is_deal && (
+                    <span className="ml-2 text-[10px] font-medium tracking-wide text-sale uppercase">Deal</span>
+                  )}
+                </>
+              ) : (
+                formatRs(item.price)
+              )}
+            </p>
           </div>
           <button
             type="button"

@@ -48,6 +48,7 @@ export const getProducts = (params = {}, options = {}) => {
   return apiFetch(`/products${query ? `?${query}` : ''}`, options)
 }
 export const getProduct = (slug, options = {}) => apiFetch(`/products/${slug}`, options)
+export const getCurrentDeal = (options = {}) => apiFetch('/deals/current', options)
 
 export async function createOrder(formData, options = {}) {
   const res = await fetch(`${API_URL}/orders`, {
@@ -199,3 +200,10 @@ export const getAdminCustomers = (params = {}) => {
 export const deleteAdminCustomer = (id) => adminRequest(`/admin/customers/${id}`, { method: 'DELETE' })
 export const getAdminSettings = () => adminRequest('/admin/settings')
 export const updateAdminSettings = (body) => adminRequest('/admin/settings', { method: 'PUT', body })
+
+export const getAdminDeals = () => adminRequest('/admin/deals')
+export const getAdminDeal = (id) => adminRequest(`/admin/deals/${id}`)
+export const createAdminDeal = (body) => adminRequest('/admin/deals', { method: 'POST', body })
+export const updateAdminDeal = (id, body) => adminRequest(`/admin/deals/${id}`, { method: 'PUT', body })
+export const toggleAdminDeal = (id) => adminRequest(`/admin/deals/${id}/toggle`, { method: 'POST' })
+export const deleteAdminDeal = (id) => adminRequest(`/admin/deals/${id}`, { method: 'DELETE' })

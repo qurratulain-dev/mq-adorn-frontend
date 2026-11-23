@@ -29,6 +29,8 @@ import AdminOrderDetail from './admin/pages/OrderDetail.jsx'
 import AdminProducts from './admin/pages/Products.jsx'
 import AdminProductEdit from './admin/pages/ProductEdit.jsx'
 import AdminReviews from './admin/pages/Reviews.jsx'
+import AdminDeals from './admin/pages/Deals.jsx'
+import AdminDealEdit from './admin/pages/DealEdit.jsx'
 import AdminCustomers from './admin/pages/Customers.jsx'
 import AdminSettings from './admin/pages/Settings.jsx'
 import { AdminAuthProvider } from './context/AdminAuthContext.jsx'
@@ -46,6 +48,9 @@ export default function App() {
         <Route path="products/new" element={<AdminProductEdit />} />
         <Route path="products/:id" element={<AdminProductEdit />} />
         <Route path="reviews" element={<AdminReviews />} />
+        <Route path="deals" element={<AdminDeals />} />
+        <Route path="deals/new" element={<AdminDealEdit />} />
+        <Route path="deals/:id" element={<AdminDealEdit />} />
         <Route path="customers" element={<AdminCustomers />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>
