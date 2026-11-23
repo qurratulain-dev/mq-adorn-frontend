@@ -96,6 +96,8 @@ async function sendJson(path, body, method = 'POST') {
 
 export const registerUser = (body) => sendJson('/register', body)
 export const loginUser = (body) => sendJson('/login', body)
+export const forgotPassword = (body) => sendJson('/forgot-password', body)
+export const resetPassword = (body) => sendJson('/reset-password', body)
 export const logoutUser = () => sendJson('/logout', null, 'POST')
 export const getUser = (options = {}) => apiFetch('/user', options)
 export const getAccountOrders = (options = {}) => apiFetch('/account/orders', options)

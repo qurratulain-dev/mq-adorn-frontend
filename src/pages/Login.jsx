@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import { WHATSAPP_DISPLAY, WHATSAPP_LINK } from '../lib/whatsapp.js'
-
 function firstError(errors) {
   if (!errors) return ''
   const value = Object.values(errors)[0]
@@ -74,12 +72,10 @@ export default function Login() {
               Create an account
             </Link>
           </p>
-          <p className="mt-4 text-xs leading-relaxed text-muted">
-            Forgot your password? Email reset is not set up yet (there is no mail service on the server). Please message us on{' '}
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="underline decoration-gold underline-offset-2 hover:text-gold">
-              WhatsApp {WHATSAPP_DISPLAY}
-            </a>{' '}
-            if you need help with your account.
+          <p className="mt-4 text-sm text-muted">
+            <Link to="/forgot-password" className="text-primary underline decoration-gold underline-offset-2 hover:text-gold">
+              Forgot your password?
+            </Link>
           </p>
         </form>
       </div>

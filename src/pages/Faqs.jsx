@@ -117,8 +117,11 @@ export default function Faqs() {
         title: 'I have an account or I forgot my password.',
         body: (
           <p>
-            You can create an account or log in from the header. Password reset by email is not set up yet. If you need
-            help with your account, please message us on{' '}
+            You can create an account or log in from the header. If you forgot your password, use the{' '}
+            <Link to="/forgot-password" className="underline decoration-gold underline-offset-2 hover:text-gold">
+              forgot password
+            </Link>{' '}
+            page and we will email you a reset link. Still stuck? Message us on{' '}
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="underline decoration-gold underline-offset-2 hover:text-gold">
               WhatsApp {WHATSAPP_DISPLAY}
             </a>

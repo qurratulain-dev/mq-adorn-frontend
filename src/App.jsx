@@ -9,6 +9,8 @@ import Cart from './pages/Cart.jsx'
 import Checkout from './pages/Checkout.jsx'
 import OrderSuccess from './pages/OrderSuccess.jsx'
 import Login from './pages/Login.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 import Signup from './pages/Signup.jsx'
 import Account from './pages/Account.jsx'
 import AccountOrder from './pages/AccountOrder.jsx'
@@ -65,6 +67,8 @@ export default function App() {
         <Route path="checkout" element={<Checkout />} />
         <Route path="order-success/:orderNumber" element={<OrderSuccess />} />
         <Route path="login" element={<Login />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route path="signup" element={<Signup />} />
         <Route path="account" element={<Account />} />
         <Route path="account/orders/:orderNumber" element={<AccountOrder />} />
