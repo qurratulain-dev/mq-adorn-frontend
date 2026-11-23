@@ -97,7 +97,7 @@ export default function DealOfTheWeek() {
   }
 
   return (
-    <Reveal as="section" className="relative overflow-hidden bg-card" aria-labelledby="deal-of-the-week-heading">
+    <Reveal as="section" id="deal-of-the-week" className="relative scroll-mt-28 overflow-hidden bg-card" aria-labelledby="deal-of-the-week-heading">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.14),transparent_58%)]" aria-hidden="true" />
       <div className="container-page relative py-12 sm:py-16">
         {status === 'loading' && (

@@ -3,6 +3,7 @@ import { getStoreSettings } from '../api/client.js'
 import { PAYMENT_METHODS } from '../config/payment.js'
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE, remainingForFreeShipping, shippingFeeFor } from '../config/shipping.js'
 import { applyWhatsAppSettings, WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from '../lib/whatsapp.js'
+import { DEFAULT_ANNOUNCEMENT_LINES } from '../lib/announcements.js'
 
 const StoreSettingsContext = createContext(null)
 
@@ -25,6 +26,7 @@ const FALLBACK = {
   freeShippingThreshold: FREE_SHIPPING_THRESHOLD,
   whatsappNumber: WHATSAPP_NUMBER,
   whatsappDisplay: WHATSAPP_DISPLAY,
+  announcementLines: DEFAULT_ANNOUNCEMENT_LINES,
 }
 
 export function StoreSettingsProvider({ children }) {
@@ -41,6 +43,7 @@ export function StoreSettingsProvider({ children }) {
           freeShippingThreshold: Number(data.free_shipping_threshold) || FREE_SHIPPING_THRESHOLD,
           whatsappNumber: data.whatsapp_number || WHATSAPP_NUMBER,
           whatsappDisplay: data.whatsapp_display || WHATSAPP_DISPLAY,
+          announcementLines: Array.isArray(data.announcement_lines) ? data.announcement_lines : DEFAULT_ANNOUNCEMENT_LINES,
         }
         applyWhatsAppSettings({ number: next.whatsappNumber, display: next.whatsappDisplay })
         setSettings(next)

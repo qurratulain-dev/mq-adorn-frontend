@@ -7,11 +7,22 @@ import WhatsAppFloat from '../components/WhatsAppFloat.jsx'
 import CartDrawer from '../components/CartDrawer.jsx'
 
 export default function MainLayout() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
+    if (!hash) {
+      window.scrollTo(0, 0)
+      return undefined
+    }
+    const id = hash.replace('#', '')
+    const scrollToHash = () => {
+      const target = document.getElementById(id)
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    scrollToHash()
+    const timer = window.setTimeout(scrollToHash, 450)
+    return () => window.clearTimeout(timer)
+  }, [pathname, hash])
 
   return (
     <div className="flex min-h-screen flex-col">
