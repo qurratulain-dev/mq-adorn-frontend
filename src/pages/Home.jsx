@@ -10,9 +10,9 @@ export default function Home() {
     <>
       <Hero />
       <CategoryRow />
-      <ShopByOccasion />
       <OfferBanners />
       <BestSellers />
+      <ShopByOccasion />
       <Testimonials />
     </>
   )

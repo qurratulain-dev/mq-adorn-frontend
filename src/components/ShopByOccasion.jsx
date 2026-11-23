@@ -4,7 +4,7 @@ import Reveal from './Reveal.jsx'
 
 export default function ShopByOccasion() {
   return (
-    <Reveal as="section" className="bg-cream" aria-labelledby="shop-by-occasion-heading">
+    <Reveal as="section" className="bg-blush" aria-labelledby="shop-by-occasion-heading">
       <div className="container-page py-12 sm:py-16">
         <div className="text-center">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">The edit</p>
