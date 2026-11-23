@@ -6,6 +6,7 @@ import BestSelling from './pages/BestSelling.jsx'
 import Occasion from './pages/Occasion.jsx'
 import Product from './pages/Product.jsx'
 import Cart from './pages/Cart.jsx'
+import Wishlist from './pages/Wishlist.jsx'
 import Checkout from './pages/Checkout.jsx'
 import OrderSuccess from './pages/OrderSuccess.jsx'
 import Login from './pages/Login.jsx'
@@ -64,6 +65,7 @@ export default function App() {
         <Route path="occasion/:slug" element={<Occasion />} />
         <Route path="product/:slug" element={<Product />} />
         <Route path="cart" element={<Cart />} />
+        <Route path="wishlist" element={<Wishlist />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="order-success/:orderNumber" element={<OrderSuccess />} />
         <Route path="login" element={<Login />} />

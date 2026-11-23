@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { quoteCartPrices } from '../api/client.js'
+import { addWishlistItem, getWishlist, quoteCartPrices, removeWishlistItem, syncWishlist } from '../api/client.js'
+import { useAuth } from './AuthContext.jsx'
 import { productPricing } from '../lib/pricing.js'
 import { useStoreSettings } from './StoreSettingsContext.jsx'
 
@@ -109,8 +110,32 @@ function applyQuotes(current, quotes) {
   return { next, priceChanged, dealEnded, unavailableChanged }
 }
 
+
+function wishlistSnapshot(product) {
+  if (!product?.slug) return null
+  const images = Array.isArray(product.images)
+    ? product.images
+    : product.image
+      ? [product.image]
+      : []
+  return {
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    images,
+    price: product.price,
+    sale_price: product.sale_price ?? null,
+    deal: product.deal || null,
+    variants: product.variants || [],
+    stock: product.stock,
+    is_new: product.is_new,
+    is_active: product.is_active !== false,
+  }
+}
+
 export function CartProvider({ children }) {
   const { shippingFeeFor } = useStoreSettings()
+  const { isLoggedIn, loading: authLoading, user } = useAuth()
   const { pathname } = useLocation()
   const [items, setItems] = useState(() => readList(CART_KEY))
   const [wishlist, setWishlist] = useState(() => readList(WISHLIST_KEY))
@@ -133,6 +158,33 @@ export function CartProvider({ children }) {
   useEffect(() => {
     localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist))
   }, [wishlist])
+
+  const syncedUserRef = useRef(null)
+
+  useEffect(() => {
+    if (authLoading) return undefined
+    if (!isLoggedIn) {
+      syncedUserRef.current = null
+      return undefined
+    }
+    const userId = user?.id ?? 'logged-in'
+    if (syncedUserRef.current === userId) return undefined
+    syncedUserRef.current = userId
+
+    const slugs = (readList(WISHLIST_KEY) || []).map((item) => item.slug).filter(Boolean)
+    let cancelled = false
+    syncWishlist({ slugs })
+      .then((payload) => {
+        if (cancelled) return
+        setWishlist((payload.data || []).map(wishlistSnapshot).filter(Boolean))
+      })
+      .catch(() => {
+        if (!cancelled) syncedUserRef.current = null
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [authLoading, isLoggedIn, user?.id])
 
   const showToast = useCallback((message) => {
     if (!message) return
@@ -288,15 +340,39 @@ export function CartProvider({ children }) {
       },
       clearCart: () => setItems([]),
       toggleWishlist: (product) => {
+        if (!product?.slug) return
+        const snapshot = wishlistSnapshot(product)
+        const exists = wishlist.some((item) => item.slug === product.slug)
         setWishlist((current) => {
-          const exists = current.some((item) => item.slug === product.slug)
-          if (exists) return current.filter((item) => item.slug !== product.slug)
-          return [...current, { slug: product.slug, name: product.name, image: product.images?.[0] }]
+          const already = current.some((item) => item.slug === product.slug)
+          if (already) return current.filter((item) => item.slug !== product.slug)
+          return snapshot ? [...current, snapshot] : current
+        })
+        if (!isLoggedIn) return
+        const request = exists
+          ? removeWishlistItem(product.slug)
+          : addWishlistItem({ slug: product.slug, product_id: product.id || undefined })
+        request.catch(() => {
+          setWishlist((current) => {
+            const nowExists = current.some((item) => item.slug === product.slug)
+            if (exists) return nowExists ? current : snapshot ? [...current, snapshot] : current
+            return current.filter((item) => item.slug !== product.slug)
+          })
+          showToast('We could not update your wishlist. Please try again.')
         })
       },
       isWishlisted: (slug) => wishlist.some((item) => item.slug === slug),
+      refreshWishlist: async () => {
+        if (isLoggedIn) {
+          const payload = await getWishlist()
+          const next = (payload.data || []).map(wishlistSnapshot).filter(Boolean)
+          setWishlist(next)
+          return next
+        }
+        return wishlist
+      },
     }
-  }, [items, wishlist, cartOpen, shippingFeeFor, refreshPrices])
+  }, [items, wishlist, cartOpen, shippingFeeFor, refreshPrices, isLoggedIn, showToast])
 
   return (
     <CartContext.Provider value={value}>

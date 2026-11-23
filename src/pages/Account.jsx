@@ -46,9 +46,14 @@ export default function Account() {
             <h1 className="mt-2 font-heading text-3xl font-medium sm:text-4xl">My orders</h1>
             {user && <p className="mt-2 text-sm text-muted">{user.name} · {user.email}</p>}
           </div>
-          <button type="button" className="btn-outline" onClick={() => logout()}>
-            Log out
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link to="/wishlist" className="btn-outline">
+              Wishlist
+            </Link>
+            <button type="button" className="btn-outline" onClick={() => logout()}>
+              Log out
+            </button>
+          </div>
         </div>
       </header>
 

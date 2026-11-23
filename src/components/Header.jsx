@@ -285,6 +285,10 @@ export default function Header() {
               <Link to={accountTo} className="flex items-center gap-3 text-sm font-medium">
                 <UserIcon /> {isLoggedIn ? 'My account' : 'Login / Register'}
               </Link>
+              <Link to="/wishlist" className="mt-3 flex items-center gap-3 text-sm font-medium">
+                <HeartIcon /> Wishlist
+                {wishlist.length > 0 ? <span className="text-xs text-muted">({wishlist.length})</span> : null}
+              </Link>
             </div>
           </aside>
         </div>,
