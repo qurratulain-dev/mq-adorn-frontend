@@ -245,15 +245,24 @@ function applyHead(template, seo) {
   return html
 }
 
-async function fetchJson(path) {
-  try {
-    const response = await fetch(`${API}${path}`, { headers: { Accept: 'application/json' } })
-    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
-    return await response.json()
-  } catch (error) {
-    console.warn(`[prerender] ${path} skipped: ${error.message}`)
-    return null
+async function fetchJson(path, { attempts = 5, timeoutMs = 20000 } = {}) {
+  let lastError = null
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(`${API}${path}`, {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(timeoutMs),
+      })
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
+      return await response.json()
+    } catch (error) {
+      lastError = error
+      console.warn(`[prerender] ${path} attempt ${attempt}/${attempts}: ${error.message}`)
+      if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 4000 * attempt))
+    }
   }
+  console.warn(`[prerender] ${path} skipped: ${lastError?.message || 'unknown error'}`)
+  return null
 }
 
 async function fetchAllProducts() {
@@ -268,6 +277,9 @@ async function fetchAllProducts() {
     lastPage = Number(payload.last_page) || 1
     page += 1
   } while (page <= lastPage && page <= 20)
+  if (!products.length) {
+    console.warn('[prerender] no products fetched; product routes will fall back to the home HTML')
+  }
   return products
 }
 
