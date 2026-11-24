@@ -11,7 +11,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
 const dist = join(root, 'dist')
 const SITE = 'https://mqadorn.vercel.app'
-const API = (process.env.VITE_API_URL || 'https://mq-adorn-backend.onrender.com/api').replace(/\/$/, '')
+const rawApi = (process.env.VITE_API_URL || '').replace(/\/$/, '')
+const API = !rawApi || /localhost|127\.0\.0\.1/.test(rawApi)
+  ? 'https://mq-adorn-backend.onrender.com/api'
+  : rawApi
 
 const DEFAULT_TITLE = 'MQ Adorn | Jewellery & Dresses Online in Pakistan'
 const DEFAULT_DESCRIPTION =
@@ -357,4 +360,12 @@ for (const product of products) {
   })
 }
 
+const status = {
+  api: API,
+  staticPages: STATIC_PAGES.length,
+  occasions: OCCASIONS.length,
+  products: products.length,
+  slugs: products.map((product) => product.slug).filter(Boolean),
+}
+await writeFile(join(dist, 'prerender-status.json'), JSON.stringify(status, null, 2))
 console.log(`[prerender] done (${STATIC_PAGES.length} static, ${OCCASIONS.length} occasions, ${products.length} products)`)
