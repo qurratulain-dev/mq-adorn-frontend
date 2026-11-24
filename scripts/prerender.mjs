@@ -301,6 +301,96 @@ async function fetchAllProducts() {
   return products
 }
 
+
+function xmlEscape(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function sitemapLoc(path) {
+  if (!path || path === '/') return `${SITE}/`
+  return `${SITE}${path.startsWith('/') ? path : `/${path}`}`
+}
+
+function sitemapLastmod(value) {
+  if (!value) return new Date().toISOString()
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString()
+}
+
+function categoryPath(category) {
+  const type = String(category.type || '').toLowerCase()
+  const slug = category.slug
+  if (['jewellery', 'dresses', 'dress'].includes(type) && ['jewellery', 'dresses'].includes(slug)) {
+    return `/shop?category=${encodeURIComponent(slug)}`
+  }
+  if (type === 'dresses' || type === 'dress') {
+    return `/shop?category=dresses&sub=${encodeURIComponent(slug)}`
+  }
+  return `/shop?category=jewellery&sub=${encodeURIComponent(slug)}`
+}
+
+async function writeSitemap({ products, categories, occasions }) {
+  const urls = []
+  const push = (path, date, freq) => {
+    urls.push({ loc: sitemapLoc(path), lastmod: sitemapLastmod(date), changefreq: freq })
+  }
+
+  const staticPaths = [
+    '/',
+    '/shop',
+    '/shop?sort=new',
+    '/best-selling',
+    '/about',
+    '/contact',
+    '/faqs',
+    '/shipping',
+    '/return-policy',
+    '/privacy',
+    '/terms',
+    '/llms.txt',
+  ]
+  const now = new Date().toISOString()
+  for (const path of staticPaths) {
+    push(path, now, path === '/' ? 'daily' : 'weekly')
+  }
+  push('/shop?category=jewellery', now, 'weekly')
+  push('/shop?category=dresses', now, 'weekly')
+
+  for (const category of categories || []) {
+    if (!category?.slug || category.is_active === false) continue
+    push(categoryPath(category), category.updated_at, 'weekly')
+  }
+  for (const occasion of occasions || []) {
+    if (!occasion?.slug) continue
+    push(`/occasion/${occasion.slug}`, occasion.updated_at, 'weekly')
+  }
+  for (const product of products || []) {
+    if (!product?.slug || product.is_active === false) continue
+    push(`/product/${product.slug}`, product.updated_at, 'weekly')
+  }
+
+  const seen = new Set()
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  for (const url of urls) {
+    if (seen.has(url.loc)) continue
+    seen.add(url.loc)
+    xml += '  <url>\n'
+    xml += `    <loc>${xmlEscape(url.loc)}</loc>\n`
+    xml += `    <lastmod>${xmlEscape(url.lastmod)}</lastmod>\n`
+    xml += `    <changefreq>${xmlEscape(url.changefreq)}</changefreq>\n`
+    xml += '  </url>\n'
+  }
+  xml += '</urlset>\n'
+  await writeFile(join(dist, 'sitemap.xml'), xml, 'utf8')
+  console.log(`[prerender] sitemap.xml (${seen.size} urls${products?.length ? '' : ', static fallback'})`)
+  return seen.size
+}
+
 async function writePage(template, seo) {
   const relative = seo.file || `${seo.path.replace(/^\//, '')}/index.html`
   const target = join(dist, relative)
@@ -382,12 +472,21 @@ for (const product of products) {
   })
 }
 
+const categoryPayload = await fetchJson('/categories')
+const categories = Array.isArray(categoryPayload?.data)
+  ? categoryPayload.data
+  : Array.isArray(categoryPayload)
+    ? categoryPayload
+    : []
+const sitemapUrls = await writeSitemap({ products, categories, occasions: OCCASIONS })
+
 const status = {
   api: API,
   staticPages: STATIC_PAGES.length,
   occasions: OCCASIONS.length,
   products: products.length,
+  sitemapUrls,
   slugs: products.map((product) => product.slug).filter(Boolean),
 }
 await writeFile(join(dist, 'prerender-status.json'), JSON.stringify(status, null, 2))
-console.log(`[prerender] done (${STATIC_PAGES.length} static, ${OCCASIONS.length} occasions, ${products.length} products)`)
+console.log(`[prerender] done (${STATIC_PAGES.length} static, ${OCCASIONS.length} occasions, ${products.length} products, ${sitemapUrls} sitemap urls)`)
