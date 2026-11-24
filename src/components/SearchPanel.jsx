@@ -178,7 +178,7 @@ export default function SearchPanel({ open, onClose }) {
                         >
                           <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden bg-white">
                             {image ? (
-                              <img src={mediaUrl(image)} alt="" className="h-full w-full object-contain p-1" />
+                              <img src={mediaUrl(image)} alt={product.name} className="h-full w-full object-contain p-1" />
                             ) : (
                               <span className="text-[10px] text-muted">No image</span>
                             )}

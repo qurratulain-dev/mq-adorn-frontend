@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { resetPassword } from '../api/client.js'
+import Seo from '../components/Seo.jsx'
 
 function firstError(errors) {
   if (!errors) return ''
@@ -68,6 +69,7 @@ export default function ResetPassword() {
 
   return (
     <div className="bg-cream">
+      <Seo title="Reset password | MQ Adorn" description="Choose a new password for your MQ Adorn account." path="/reset-password" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">Account</p>

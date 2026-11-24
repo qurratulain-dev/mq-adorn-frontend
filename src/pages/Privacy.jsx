@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero.jsx'
 import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
 import { whatsappDisplay, whatsappLink } from '../lib/whatsapp.js'
+import Seo from '../components/Seo.jsx'
+import { PAGE_SEO } from '../lib/seo.js'
 
 export default function Privacy() {
   const settings = useStoreSettings()
@@ -10,6 +12,7 @@ export default function Privacy() {
 
   return (
     <div>
+      <Seo title={PAGE_SEO['privacy'].title} description={PAGE_SEO['privacy'].description} path={PAGE_SEO['privacy'].path} />
       <PageHero eyebrow="Policies" title="Privacy Policy" />
       <div className="container-page max-w-3xl space-y-6 py-10 text-sm leading-relaxed text-primary/90 sm:py-14">
         <p>

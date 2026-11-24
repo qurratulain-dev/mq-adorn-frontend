@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { SESSION_EXPIRED_MESSAGE } from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import Seo from '../components/Seo.jsx'
 
 function safeNext(value, fallback) {
   if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return fallback
@@ -52,6 +53,7 @@ export default function Login() {
 
   return (
     <div className="bg-cream">
+      <Seo title="Log in | MQ Adorn" description="Log in to your MQ Adorn account." path="/login" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">Account</p>

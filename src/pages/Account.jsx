@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import { getAccountOrders } from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { formatRs } from '../lib/format.js'
+import Seo from '../components/Seo.jsx'
 
 function statusText(order) {
   if (order.status === 'delivered') return 'Delivered'
@@ -39,6 +40,7 @@ export default function Account() {
 
   return (
     <div className="bg-cream">
+      <Seo title="My orders | MQ Adorn" description="Your MQ Adorn orders." path="/account" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page flex flex-wrap items-end justify-between gap-4 py-8 sm:py-10">
           <div>

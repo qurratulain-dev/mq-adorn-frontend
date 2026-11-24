@@ -26,7 +26,7 @@ export default function CategoryRow() {
                 className="group flex flex-col items-center gap-3 text-center"
               >
                 <span className="block aspect-square w-20 overflow-hidden rounded-full bg-cream shadow-[0_8px_24px_-12px_rgba(26,26,26,0.35)] ring-1 ring-black/5 transition group-hover:shadow-[0_12px_28px_-10px_rgba(26,26,26,0.4)] sm:w-[6.5rem] lg:w-28">
-                  <img src={item.image} alt="" className="img-zoom h-full w-full object-cover" />
+                  <img src={item.image} alt={item.label} className="img-zoom h-full w-full object-cover" />
                 </span>
                 <span className="text-sm text-primary">{item.label}</span>
               </Link>

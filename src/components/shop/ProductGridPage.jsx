@@ -4,6 +4,7 @@ import { getProducts } from '../../api/client.js'
 import ProductCard, { ProductCardSkeleton } from '../ProductCard.jsx'
 import Reveal from '../Reveal.jsx'
 import { ChevronLeftIcon, ChevronRightIcon, Grid2Icon, Grid3Icon, Grid4Icon } from '../Icons.jsx'
+import Seo from '../Seo.jsx'
 
 const PER_PAGE = 12
 
@@ -31,6 +32,9 @@ export default function ProductGridPage({
   params = {},
   emptyTitle = 'Nothing to show just yet',
   emptyBody = 'Please check back in a moment.',
+  seoTitle,
+  seoDescription,
+  seoPath,
 }) {
   const [page, setPage] = useState(1)
   const [cols, setCols] = useState(4)
@@ -60,13 +64,6 @@ export default function ProductGridPage({
     return () => controller.abort()
   }, [JSON.stringify(params), page, reloadTick])
 
-  useEffect(() => {
-    document.title = `${title} | MQ Adorn`
-    return () => {
-      document.title = 'MQ Adorn — Jewellery & Dresses'
-    }
-  }, [title])
-
   const products = Array.isArray(payload?.data) ? payload.data : []
   const total = Number(payload?.total) || 0
   const lastPage = Number(payload?.last_page) || 1
@@ -75,6 +72,11 @@ export default function ProductGridPage({
 
   return (
     <div className="bg-cream">
+      <Seo
+        title={seoTitle || `${title} | MQ Adorn`}
+        description={seoDescription || `Shop ${title} at MQ Adorn, jewellery and dresses online in Pakistan.`}
+        path={seoPath || '/shop'}
+      />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <nav aria-label="Breadcrumb" className="text-xs tracking-wide text-muted uppercase">

@@ -4,6 +4,7 @@ import { getAccountOrder, submitReview } from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { formatRs } from '../lib/format.js'
 import DeliveryAddress from '../components/DeliveryAddress.jsx'
+import Seo from '../components/Seo.jsx'
 
 export default function AccountOrder() {
   const { orderNumber } = useParams()
@@ -69,6 +70,7 @@ export default function AccountOrder() {
   if (status === 'notfound') {
     return (
       <section className="container-page py-20 text-center">
+        <Seo title="Order not found | MQ Adorn" description="This order could not be found." path={`/account/orders/${orderNumber || ''}`} noindex />
         <h1 className="font-heading text-3xl">Order not found</h1>
         <Link to="/account" className="btn-primary mt-6 inline-flex">
           Back to my orders
@@ -81,6 +83,7 @@ export default function AccountOrder() {
 
   return (
     <div className="bg-cream">
+      <Seo title={`${orderNumber || 'Order'} | MQ Adorn`} description="Your MQ Adorn order details." path={`/account/orders/${orderNumber || ''}`} noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <Link to="/account" className="text-xs tracking-wide text-muted uppercase hover:text-gold">

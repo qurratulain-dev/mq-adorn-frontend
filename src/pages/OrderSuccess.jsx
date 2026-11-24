@@ -4,6 +4,7 @@ import { getOrder } from '../api/client.js'
 import { WhatsAppIcon } from '../components/Icons.jsx'
 import { formatRs } from '../lib/format.js'
 import { WHATSAPP_DISPLAY, orderPlacedHref } from '../lib/whatsapp.js'
+import Seo from '../components/Seo.jsx'
 
 export default function OrderSuccess() {
   const { orderNumber } = useParams()
@@ -47,6 +48,7 @@ export default function OrderSuccess() {
   if (status === 'notfound') {
     return (
       <section className="container-page py-20 text-center">
+        <Seo title="Order not found | MQ Adorn" description="This order could not be found." path={`/order-success/${orderNumber || ''}`} noindex />
         <h1 className="font-heading text-3xl">Order not found</h1>
         <p className="mt-3 text-sm text-muted">Please check the order number and try again.</p>
         <Link to="/" className="btn-primary mt-6 inline-flex">
@@ -58,6 +60,7 @@ export default function OrderSuccess() {
 
   return (
     <div className="bg-cream">
+      <Seo title="Order received | MQ Adorn" description="Your MQ Adorn order has been received." path={`/order-success/${orderNumber || ''}`} noindex />
       <div className="container-page py-16 sm:py-20">
         <div className="mx-auto max-w-xl border border-gold/30 bg-card px-6 py-12 text-center sm:px-10">
           <p className="text-xs font-medium tracking-[0.28em] text-gold uppercase">Thank you</p>

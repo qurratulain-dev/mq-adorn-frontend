@@ -1,0 +1,71 @@
+# MQ Adorn — public pages are open to search engines and AI crawlers.
+# Private account, checkout and admin paths are disallowed.
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /account
+Disallow: /account/
+Disallow: /cart
+Disallow: /wishlist
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /order-success
+Disallow: /order-success/
+
+# Explicitly allow major search and AI crawlers on the same public pages.
+# Google Search / Gemini / AI Overviews: Googlebot, Google-Extended
+# Bing / Copilot / ChatGPT search (Bing index): Bingbot
+# ChatGPT / OpenAI: GPTBot, OAI-SearchBot, ChatGPT-User
+# Perplexity: PerplexityBot, Perplexity-User
+# Claude / Anthropic: ClaudeBot, Claude-User, anthropic-ai
+# Meta AI / Facebook / Instagram: Meta-ExternalAgent, meta-externalfetcher, FacebookBot
+# Apple Intelligence / Spotlight / Siri: Applebot, Applebot-Extended
+# Amazon: Amazonbot
+# You.com: YouBot
+# DuckDuckGo AI: DuckAssistBot
+# Cohere: cohere-ai
+# Common Crawl (training corpora used by many tools): CCBot
+# ByteDance / Douyin / TikTok search: Bytespider
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Meta-ExternalAgent
+User-agent: meta-externalfetcher
+User-agent: FacebookBot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Amazonbot
+User-agent: YouBot
+User-agent: DuckAssistBot
+User-agent: cohere-ai
+User-agent: Bytespider
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /account
+Disallow: /account/
+Disallow: /cart
+Disallow: /wishlist
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /order-success
+Disallow: /order-success/
+
+Sitemap: https://mqadorn.vercel.app/sitemap.xml

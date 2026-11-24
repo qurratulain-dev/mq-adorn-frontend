@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAdminAuth } from '../context/AdminAuthContext.jsx'
+import Seo from '../components/Seo.jsx'
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', end: true },
@@ -58,6 +59,7 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-cream text-primary">
+      <Seo title="Admin | MQ Adorn" description="MQ Adorn admin." path="/admin" noindex />
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-black/5 bg-card md:flex md:flex-col">
         <div className="border-b border-black/5 px-5 py-5">
           <p className="font-heading text-xl">MQ Adorn</p>

@@ -151,7 +151,7 @@ export default function ProductGallery({ images, name, badge }) {
                 }`}
                 onClick={() => setIndex(i)}
               >
-                <img src={mediaUrl(src)} alt="" className="h-full w-full object-cover" />
+                <img src={mediaUrl(src)} alt={`${name} thumbnail ${i + 1}`} className="h-full w-full object-cover" />
               </button>
             </li>
           ))}

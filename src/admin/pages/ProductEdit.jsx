@@ -266,7 +266,7 @@ export default function AdminProductEdit() {
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {form.images.map((url, index) => (
             <div key={`${url}-${index}`} className="border border-black/10 bg-card p-2">
-              <img src={mediaUrl(url)} alt="" className="aspect-square w-full object-cover" />
+              <img src={mediaUrl(url)} alt="Product image" className="aspect-square w-full object-cover" />
               <div className="mt-2 flex items-center justify-between text-xs">
                 <span>{index === 0 ? 'Primary' : `Photo ${index + 1}`}</span>
                 <span className="flex gap-2">

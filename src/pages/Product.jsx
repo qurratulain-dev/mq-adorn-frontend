@@ -12,6 +12,8 @@ import { availableStock, colorHex, firstAvailableSelection, findVariant, uniqueV
 import { shopPath } from '../lib/shopParams.js'
 import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
 import { DELIVERY_COPY, NO_RETURNS_INTRO, NO_RETURNS_ADVICE } from '../content/policies.js'
+import Seo from '../components/Seo.jsx'
+import { productJsonLd, truncateMeta } from '../lib/seo.js'
 
 const DETAIL_SECTIONS = (product) => {
   const isDress = product.type === 'dress'
@@ -194,14 +196,6 @@ export default function Product() {
     }
   }, [slug])
 
-  useEffect(() => {
-    if (!product) return undefined
-    document.title = `${product.name} | MQ Adorn`
-    return () => {
-      document.title = 'MQ Adorn — Jewellery & Dresses'
-    }
-  }, [product])
-
   const colors = useMemo(() => uniqueValues(product?.variants, 'color'), [product])
   const sizes = useMemo(() => {
     const variants = product?.variants || []
@@ -230,11 +224,37 @@ export default function Product() {
     window.setTimeout(() => setAdded(false), 2500)
   }
 
-  if (status === 'loading') return <ProductSkeleton />
+  const productPath = `/product/${slug}`
+  const productSeo = product
+    ? {
+        title: `${product.name} | MQ Adorn`,
+        description: truncateMeta(
+          product.description || `Shop ${product.name} at MQ Adorn, jewellery and dresses online in Pakistan.`,
+        ),
+        image: product.images?.[0],
+        jsonLd: productJsonLd(product, {
+          price: unitPrice,
+          reviews,
+          rating,
+          image: product.images?.[0],
+          url: `https://mqadorn.vercel.app${productPath}`,
+        }),
+      }
+    : null
+
+  if (status === 'loading') {
+    return (
+      <>
+        <Seo title="MQ Adorn" description="Loading this piece from MQ Adorn." path={productPath} />
+        <ProductSkeleton />
+      </>
+    )
+  }
 
   if (status === 'notfound') {
     return (
       <section className="container-page py-20 sm:py-28">
+        <Seo title="Product not found | MQ Adorn" description="This piece may have been removed from MQ Adorn." path={productPath} noindex />
         <div className="mx-auto max-w-2xl border border-gold/30 bg-card px-6 py-14 text-center sm:px-12">
           <p className="text-xs font-medium tracking-[0.3em] text-gold uppercase">404</p>
           <h1 className="mt-3 font-heading text-3xl font-semibold sm:text-4xl">Product not found</h1>
@@ -255,6 +275,7 @@ export default function Product() {
   if (status === 'error') {
     return (
       <section className="container-page py-20 sm:py-28">
+        <Seo title="MQ Adorn" description="We could not load this product just now." path={productPath} noindex />
         <div className="mx-auto max-w-2xl border border-black/5 bg-card px-6 py-14 text-center sm:px-12">
           <h1 className="font-heading text-3xl font-semibold">The shop is warming up</h1>
           <p className="mt-3 text-sm text-muted">We could not load this product just now. Please try again in a moment.</p>
@@ -268,6 +289,16 @@ export default function Product() {
 
   return (
     <div className="bg-cream">
+      <Seo
+        title={productSeo.title}
+        description={productSeo.description}
+        path={productPath}
+        type="product"
+        image={productSeo.image}
+        imageAlt={product.name}
+        price={unitPrice}
+        jsonLd={productSeo.jsonLd}
+      />
       <div className="container-page py-6 sm:py-8 lg:py-12">
         <Breadcrumbs product={product} />
 

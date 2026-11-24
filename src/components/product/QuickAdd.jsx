@@ -73,7 +73,7 @@ export default function QuickAdd({ product, open, onClose }) {
         }`}
       >
         <div className="flex items-start gap-4 border-b border-black/10 px-5 py-4">
-          {image && <img src={mediaUrl(image)} alt="" className="h-16 w-16 object-cover" />}
+          {image && <img src={mediaUrl(image)} alt={product?.name || 'Product'} className="h-16 w-16 object-cover" />}
           <div className="min-w-0 flex-1">
             <h2 id="quick-add-title" className="font-heading text-xl">
               Choose options

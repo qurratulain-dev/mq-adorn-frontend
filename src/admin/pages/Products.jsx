@@ -74,7 +74,7 @@ export default function AdminProducts() {
               <tr key={product.id} className="border-t border-black/5">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    {product.images?.[0] ? <img src={mediaUrl(product.images[0])} alt="" className="h-12 w-12 object-cover" /> : <div className="h-12 w-12 bg-cream" />}
+                    {product.images?.[0] ? <img src={mediaUrl(product.images[0])} alt={product.name} className="h-12 w-12 object-cover" /> : <div className="h-12 w-12 bg-cream" />}
                     <div>
                       <Link to={`/admin/products/${product.id}`} className="hover:text-gold">{product.name}</Link>
                       <div className="text-[11px] text-muted uppercase">{product.type}</div>

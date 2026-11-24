@@ -5,6 +5,9 @@ import PageHero from '../components/PageHero.jsx'
 import { DELIVERY_COPY, NO_RETURNS_ADVICE, NO_RETURNS_INTRO, NO_RETURNS_POINTS, shippingChargesCopy } from '../content/policies.js'
 import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
 import { WHATSAPP_DISPLAY, WHATSAPP_LINK } from '../lib/whatsapp.js'
+import Seo from '../components/Seo.jsx'
+import { PAGE_SEO, faqJsonLd } from '../lib/seo.js'
+import { faqEntries } from '../content/faqs.js'
 
 export default function Faqs() {
   const { freeShippingThreshold, shippingFee } = useStoreSettings()
@@ -130,11 +133,15 @@ export default function Faqs() {
         ),
       },
     ],
-    [],
+    [freeShippingThreshold, shippingFee],
   )
+
+  const seo = PAGE_SEO.faqs
+  const faqLd = faqJsonLd(faqEntries({ freeShippingThreshold, shippingFee }))
 
   return (
     <div className="bg-cream">
+      <Seo title={seo.title} description={seo.description} path={seo.path} jsonLd={faqLd} />
       <PageHero eyebrow="Customer care" title="FAQs">
         Short answers about ordering, payment, delivery and our no-returns policy.
       </PageHero>

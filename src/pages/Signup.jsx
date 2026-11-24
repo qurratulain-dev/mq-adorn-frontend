@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { isPakistaniPhone } from '../lib/phone.js'
+import Seo from '../components/Seo.jsx'
 
 function firstError(errors) {
   if (!errors) return ''
@@ -74,6 +75,7 @@ export default function Signup() {
 
   return (
     <div className="bg-cream">
+      <Seo title="Create account | MQ Adorn" description="Create an MQ Adorn account." path="/signup" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">Account</p>

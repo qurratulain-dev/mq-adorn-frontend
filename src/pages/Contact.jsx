@@ -4,6 +4,8 @@ import PageHero from '../components/PageHero.jsx'
 import { InstagramIcon, TikTokIcon, WhatsAppIcon } from '../components/Icons.jsx'
 import { SOCIAL_LINKS } from '../components/navLinks.js'
 import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
+import Seo from '../components/Seo.jsx'
+import { PAGE_SEO } from '../lib/seo.js'
 
 const ICONS = { tiktok: TikTokIcon, instagram: InstagramIcon }
 
@@ -27,6 +29,7 @@ export default function Contact() {
 
   return (
     <div className="bg-cream">
+      <Seo title={PAGE_SEO['contact'].title} description={PAGE_SEO['contact'].description} path={PAGE_SEO['contact'].path} />
       <PageHero eyebrow="Customer care" title="Contact">
         The quickest way to reach us is WhatsApp. You can also find us on Instagram and TikTok.
       </PageHero>

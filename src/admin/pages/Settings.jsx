@@ -31,6 +31,7 @@ export default function AdminSettings() {
           shipping_fee: data.shipping_fee,
           free_shipping_threshold: data.free_shipping_threshold,
           whatsapp_number: data.whatsapp_number,
+          google_site_verification: data.google_site_verification || '',
           announcement_lines: Array.isArray(data.announcement_lines) && data.announcement_lines.length
             ? data.announcement_lines.map((line) => ({
                 text: line.text || '',
@@ -130,6 +131,24 @@ export default function AdminSettings() {
                 <input type="number" min="0" className="w-full border border-black/15 px-3 py-2.5 text-sm outline-none focus:border-gold" value={form.free_shipping_threshold} onChange={(e) => setForm({ ...form, free_shipping_threshold: e.target.value })} />
               </label>
             </div>
+          </section>
+
+
+          <section className="border border-black/5 bg-card p-5">
+            <h2 className="font-heading text-xl">Google Search Console</h2>
+            <p className="mt-1 text-sm text-muted">
+              Paste the HTML-tag verification code from Google Search Console (the <code className="text-xs">content</code> value, or the full meta tag). Saving this publishes the tag on the public site without a new deploy. You can also set <code className="text-xs">VITE_GOOGLE_SITE_VERIFICATION</code> on Vercel as a fallback.
+            </p>
+            <label className="mt-4 block">
+              <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Verification code</span>
+              <input
+                className="w-full border border-black/15 px-3 py-2.5 text-sm outline-none focus:border-gold"
+                value={form.google_site_verification}
+                onChange={(e) => setForm({ ...form, google_site_verification: e.target.value })}
+                placeholder="content value or full meta tag"
+                autoComplete="off"
+              />
+            </label>
           </section>
 
           <section className="border border-black/5 bg-card p-5">

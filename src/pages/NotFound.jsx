@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
+import Seo from '../components/Seo.jsx'
 
 export default function NotFound() {
   return (
     <div className="bg-cream">
+      <Seo title="Page not found | MQ Adorn" description="This page could not be found on MQ Adorn." path="/404" noindex />
       <div className="container-page py-16 sm:py-24">
         <div className="mx-auto max-w-xl border border-gold/30 bg-card px-6 py-14 text-center sm:px-10">
           <p className="text-xs font-medium tracking-[0.28em] text-gold uppercase">404</p>

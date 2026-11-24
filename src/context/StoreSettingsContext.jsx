@@ -27,6 +27,7 @@ const FALLBACK = {
   whatsappNumber: WHATSAPP_NUMBER,
   whatsappDisplay: WHATSAPP_DISPLAY,
   announcementLines: DEFAULT_ANNOUNCEMENT_LINES,
+  googleSiteVerification: '',
 }
 
 export function StoreSettingsProvider({ children }) {
@@ -44,6 +45,7 @@ export function StoreSettingsProvider({ children }) {
           whatsappNumber: data.whatsapp_number || WHATSAPP_NUMBER,
           whatsappDisplay: data.whatsapp_display || WHATSAPP_DISPLAY,
           announcementLines: Array.isArray(data.announcement_lines) ? data.announcement_lines : DEFAULT_ANNOUNCEMENT_LINES,
+          googleSiteVerification: data.google_site_verification || '',
         }
         applyWhatsAppSettings({ number: next.whatsappNumber, display: next.whatsappDisplay })
         setSettings(next)

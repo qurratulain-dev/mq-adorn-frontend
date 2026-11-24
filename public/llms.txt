@@ -1,0 +1,33 @@
+# MQ Adorn
+
+MQ Adorn is an online shop for jewellery and dresses, delivered across Pakistan. The collection is jewellery-first (earrings, necklaces, rings, bracelets, bangles and jewellery sets) and also includes dresses.
+
+Website: https://mqadorn.vercel.app
+Instagram: https://www.instagram.com/mqadorn.pk/
+TikTok: https://www.tiktok.com/@mqadorn.pk
+
+## Buying
+
+- Guest checkout is available; creating an account is optional.
+- Payment is by JazzCash, Easypaisa or bank transfer only. A payment screenshot must be uploaded with the order.
+- MQ Adorn does not offer Cash on Delivery and does not take card payments on the website.
+- After payment is confirmed, delivery details are shared on WhatsApp. MQ Adorn delivers across Pakistan.
+- Shipping is free on orders above Rs. 5,000. Orders under that amount have a flat shipping fee of Rs. 250. These amounts are set in the shop and may be updated by the owner.
+- All sales are final. MQ Adorn does not accept returns, refunds or exchanges, and an order cannot be cancelled for a refund after it has been placed and paid.
+
+## Contact
+
+WhatsApp: +92 329 5349850
+Contact page: https://mqadorn.vercel.app/contact
+
+## Key pages
+
+- Home: https://mqadorn.vercel.app/
+- Shop: https://mqadorn.vercel.app/shop
+- Best selling: https://mqadorn.vercel.app/best-selling
+- About: https://mqadorn.vercel.app/about
+- FAQs: https://mqadorn.vercel.app/faqs
+- Shipping: https://mqadorn.vercel.app/shipping
+- Return policy: https://mqadorn.vercel.app/return-policy
+- Privacy: https://mqadorn.vercel.app/privacy
+- Terms: https://mqadorn.vercel.app/terms

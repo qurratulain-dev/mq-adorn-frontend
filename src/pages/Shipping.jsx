@@ -2,11 +2,14 @@ import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero.jsx'
 import { DELIVERY_COPY, NO_RETURNS_SHORT, shippingChargesCopy } from '../content/policies.js'
 import { useStoreSettings } from '../context/StoreSettingsContext.jsx'
+import Seo from '../components/Seo.jsx'
+import { PAGE_SEO } from '../lib/seo.js'
 
 export default function Shipping() {
   const { freeShippingThreshold, shippingFee } = useStoreSettings()
   return (
     <div className="bg-cream">
+      <Seo title={PAGE_SEO['shipping'].title} description={PAGE_SEO['shipping'].description} path={PAGE_SEO['shipping'].path} />
       <PageHero eyebrow="Customer care" title="Shipping">
         Delivery across Pakistan, with a simple shipping charge.
       </PageHero>

@@ -5,6 +5,7 @@ import ProductCard, { ProductCardSkeleton } from '../components/ProductCard.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useCart } from '../context/CartContext.jsx'
+import Seo from '../components/Seo.jsx'
 
 function asProduct(item) {
   if (!item) return null
@@ -77,6 +78,7 @@ export default function Wishlist() {
 
   return (
     <div className="bg-cream">
+      <Seo title="Wishlist | MQ Adorn" description="Your saved MQ Adorn pieces." path="/wishlist" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <nav aria-label="Breadcrumb" className="text-xs tracking-wide text-muted uppercase">

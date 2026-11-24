@@ -61,6 +61,9 @@ export default function Hero() {
             Jewellery & Dresses
           </p>
           <h1 className="mt-3 max-w-lg font-heading text-4xl leading-[1.15] font-medium sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            <span className="mb-2 block font-heading text-[0.42em] font-medium tracking-[0.18em] text-primary uppercase sm:text-[0.38em]">
+              MQ Adorn
+            </span>
             Elegance in Every Detail
           </h1>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-muted sm:text-[15px]">

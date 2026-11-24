@@ -18,7 +18,7 @@ export default function CartItem({ item, compact = false, onNavigate }) {
         className={`shrink-0 overflow-hidden bg-blush/50 ${compact ? 'h-20 w-20' : 'h-24 w-24 sm:h-28 sm:w-28'}`}
       >
         {item.image ? (
-          <img src={mediaUrl(item.image)} alt="" className="h-full w-full object-cover" />
+          <img src={mediaUrl(item.image)} alt={item.name || 'Bag item'} className="h-full w-full object-cover" />
         ) : (
           <span className="flex h-full items-center justify-center text-[10px] text-muted">No image</span>
         )}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { forgotPassword } from '../api/client.js'
+import Seo from '../components/Seo.jsx'
 
 function firstError(errors) {
   if (!errors) return ''
@@ -45,6 +46,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="bg-cream">
+      <Seo title="Forgot password | MQ Adorn" description="Reset your MQ Adorn account password." path="/forgot-password" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">Account</p>

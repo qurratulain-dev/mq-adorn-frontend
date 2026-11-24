@@ -25,7 +25,7 @@ export default function ShopByOccasion() {
               >
                 <img
                   src={item.image}
-                  alt=""
+                  alt={item.name}
                   className="img-zoom h-full w-full object-cover transition duration-700 ease-out group-hover:scale-110"
                 />
                 <span className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent transition duration-500 group-hover:from-primary/90" />

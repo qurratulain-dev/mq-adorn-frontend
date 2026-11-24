@@ -11,6 +11,7 @@ import { isPakistaniPhone } from '../lib/phone.js'
 import { PROVINCES } from '../lib/pakistan.js'
 import { NO_RETURNS_CHECKBOX, NO_RETURNS_SHORT } from '../content/policies.js'
 import { isMobileDevice, orderPlacedHref } from '../lib/whatsapp.js'
+import Seo from '../components/Seo.jsx'
 
 const CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Peshawar', 'Quetta', 'Multan', 'Hyderabad', 'Sialkot']
 
@@ -231,6 +232,7 @@ if (!form.payment_method) next.payment_method = 'Please choose a payment method.
 
   return (
     <div className="bg-cream">
+      <Seo title="Checkout | MQ Adorn" description="Checkout at MQ Adorn." path="/checkout" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">{user ? 'Checkout' : 'Guest checkout'}</p>

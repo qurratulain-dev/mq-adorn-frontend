@@ -7,6 +7,8 @@ import Reveal from '../components/Reveal.jsx'
 import ShopFilters from '../components/shop/ShopFilters.jsx'
 import { CloseIcon, FilterIcon, Grid2Icon, Grid3Icon, Grid4Icon, SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '../components/Icons.jsx'
 import { useDebouncedValue } from '../lib/hooks.js'
+import Seo from '../components/Seo.jsx'
+import { shopSeo } from '../lib/seo.js'
 import {
   PRICE_RANGES,
   SORT_OPTIONS,
@@ -225,14 +227,6 @@ export default function Shop() {
   }, [values, reloadTick])
 
   useEffect(() => {
-    const title = values.sub ? subLabel(values.category, values.sub) : values.category === 'dresses' ? 'Dresses' : 'Jewellery'
-    document.title = `${title} | MQ Adorn`
-    return () => {
-      document.title = 'MQ Adorn — Jewellery & Dresses'
-    }
-  }, [values.category, values.sub])
-
-  useEffect(() => {
     if (!filtersOpen) return undefined
     const onKey = (event) => {
       if (event.key === 'Escape') setFiltersOpen(false)
@@ -257,8 +251,17 @@ export default function Shop() {
     update({ category, sub: '', size: category === 'dresses' ? values.size : '' })
   }
 
+  const seo = shopSeo({
+    category: values.category,
+    sub: values.sub,
+    heading,
+    path: shopPath(values),
+    search: shopPath(values),
+  })
+
   return (
     <div className="bg-cream">
+      <Seo title={seo.title} description={seo.description} path={seo.path} />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <Breadcrumbs values={values} />

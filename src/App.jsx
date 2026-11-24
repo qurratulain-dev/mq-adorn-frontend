@@ -77,6 +77,7 @@ export default function App() {
         <Route path="dresses" element={<Dresses />} />
         <Route path="about" element={<About />} />
         <Route path="faqs" element={<Faqs />} />
+        <Route path="faq" element={<Navigate to="/faqs" replace />} />
         <Route path="contact" element={<Contact />} />
         <Route path="return-policy" element={<ReturnPolicy />} />
         <Route path="shipping" element={<Shipping />} />

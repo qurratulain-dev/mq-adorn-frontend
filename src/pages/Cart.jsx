@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'
 import CartItem from '../components/cart/CartItem.jsx'
 import CartSummary from '../components/cart/CartSummary.jsx'
 import { useCart } from '../context/CartContext.jsx'
+import Seo from '../components/Seo.jsx'
 
 export default function Cart() {
   const { items, cartCount } = useCart()
 
   return (
     <div className="bg-cream">
+      <Seo title="Your bag | MQ Adorn" description="The jewellery and dresses in your MQ Adorn bag." path="/cart" noindex />
       <header className="border-b border-black/5 bg-blush/60">
         <div className="container-page py-8 sm:py-10">
           <p className="text-xs tracking-[0.22em] text-muted uppercase">Shopping bag</p>

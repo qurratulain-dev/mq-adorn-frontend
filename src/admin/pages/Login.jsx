@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { SESSION_EXPIRED_MESSAGE } from '../../api/client.js'
 import { useAdminAuth } from '../../context/AdminAuthContext.jsx'
+import Seo from '../../components/Seo.jsx'
 
 function safeNext(value, fallback) {
   if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return fallback
@@ -47,6 +48,7 @@ export default function AdminLogin() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-cream px-4 py-10">
+      <Seo title="Admin login | MQ Adorn" description="MQ Adorn admin login." path="/admin/login" noindex />
       <form className="w-full max-w-md border border-black/5 bg-card p-6 sm:p-8" onSubmit={submit} noValidate>
         <p className="text-xs tracking-[0.22em] text-muted uppercase">MQ Adorn</p>
         <h1 className="mt-2 font-heading text-3xl">Admin login</h1>

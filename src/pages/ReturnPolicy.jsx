@@ -2,10 +2,13 @@ import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero.jsx'
 import { NO_RETURNS_ADVICE, NO_RETURNS_INTRO, NO_RETURNS_POINTS, NO_RETURNS_SHORT } from '../content/policies.js'
 import { WHATSAPP_DISPLAY, WHATSAPP_LINK } from '../lib/whatsapp.js'
+import Seo from '../components/Seo.jsx'
+import { PAGE_SEO } from '../lib/seo.js'
 
 export default function ReturnPolicy() {
   return (
     <div className="bg-cream">
+      <Seo title={PAGE_SEO['return-policy'].title} description={PAGE_SEO['return-policy'].description} path={PAGE_SEO['return-policy'].path} />
       <PageHero eyebrow="Customer care" title="Return Policy">
         {NO_RETURNS_SHORT}
       </PageHero>
