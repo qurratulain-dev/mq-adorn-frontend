@@ -11,10 +11,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
 const dist = join(root, 'dist')
 const SITE = 'https://mqadorn.vercel.app'
-const rawApi = (process.env.VITE_API_URL || '').replace(/\/$/, '')
-const API = !rawApi || /localhost|127\.0\.0\.1/.test(rawApi)
-  ? 'https://mq-adorn-backend.onrender.com/api'
-  : rawApi
+function resolveApiUrl() {
+  const raw = (process.env.VITE_API_URL || '').replace(/\/$/, '')
+  if (!raw || /localhost|127\.0\.0\.1/.test(raw)) {
+    return 'https://mq-adorn-backend.onrender.com/api'
+  }
+  return raw.endsWith('/api') ? raw : `${raw}/api`
+}
+
+const API = resolveApiUrl()
 
 const DEFAULT_TITLE = 'MQ Adorn | Jewellery & Dresses Online in Pakistan'
 const DEFAULT_DESCRIPTION =
