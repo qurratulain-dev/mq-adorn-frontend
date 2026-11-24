@@ -8,7 +8,7 @@ import { BagIcon, HeartIcon, MinusIcon, PlusIcon, WhatsAppIcon } from '../compon
 import { useCart } from '../context/CartContext.jsx'
 import { formatRs } from '../lib/format.js'
 import { productPricing } from '../lib/pricing.js'
-import { availableStock, colorHex, firstAvailableSelection, findVariant, uniqueValues } from '../lib/product.js'
+import { availableStock, colorHex, firstAvailableSelection, findVariant, imagesForColor, uniqueValues } from '../lib/product.js'
 import { shopPath } from '../lib/shopParams.js'
 import { WHATSAPP_DISPLAY, whatsappHref } from '../lib/whatsapp.js'
 import { DELIVERY_COPY, NO_RETURNS_INTRO, NO_RETURNS_ADVICE } from '../content/policies.js'
@@ -304,7 +304,7 @@ export default function Product() {
 
         <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
           <ProductGallery
-            images={product.images}
+            images={imagesForColor(product, color)}
             name={product.name}
             badge={pricing.badge}
           />
@@ -327,6 +327,9 @@ export default function Product() {
                 <span className="font-medium">{formatRs(unitPrice)}</span>
               )}
             </p>
+            {pricing.bundle && (
+              <p className="mt-2 text-sm font-medium text-sale">{pricing.bundle.label} — mix any colours of this piece</p>
+            )}
             <p className={`mt-2 text-sm ${inStock ? (stock <= 3 ? 'text-sale' : 'text-success') : 'text-sale'}`}>
               {inStock ? (stock <= 3 ? `Only ${stock} left` : 'In stock') : 'Out of stock'}
             </p>

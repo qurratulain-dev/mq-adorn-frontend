@@ -18,6 +18,9 @@ const emptyForm = {
   is_best_seller: false,
   is_new: false,
   is_active: true,
+  is_dummy: true,
+  bundle_qty: '',
+  bundle_price: '',
   variants: [emptyVariant()],
   images: [],
   occasions: [],
@@ -62,6 +65,9 @@ export default function AdminProductEdit() {
           is_best_seller: Boolean(product.is_best_seller),
           is_new: Boolean(product.is_new),
           is_active: product.is_active !== false,
+          is_dummy: product.is_dummy !== false,
+          bundle_qty: product.bundle_qty ?? '',
+          bundle_price: product.bundle_price ?? '',
           variants: (product.variants || []).length ? product.variants.map((v) => ({ id: v.id, color: v.color || '', size: v.size || '', stock: v.stock ?? 0, sku: v.sku || '', price: v.price ?? '' })) : [emptyVariant()],
           images: product.images || [],
           occasions: (product.occasions || []).map((item) => item.slug || item),
@@ -84,6 +90,9 @@ export default function AdminProductEdit() {
     is_best_seller: form.is_best_seller,
     is_new: form.is_new,
     is_active: form.is_active,
+    is_dummy: form.is_dummy,
+    bundle_qty: form.bundle_qty === '' ? null : Number(form.bundle_qty),
+    bundle_price: form.bundle_price === '' ? null : Number(form.bundle_price),
     variants: form.variants
       .filter((row) => row.color || row.size || Number(row.stock) > 0 || row.sku)
       .map((row) => ({
@@ -227,12 +236,25 @@ export default function AdminProductEdit() {
           ['is_best_seller', 'Best Seller'],
           ['is_new', 'New'],
           ['is_active', 'Active'],
+          ['is_dummy', 'Dummy / placeholder photos'],
         ].map(([key, label]) => (
           <label key={key} className="inline-flex items-center gap-2">
             <input type="checkbox" checked={form[key]} onChange={(e) => field(key, e.target.checked)} data-testid={key === 'is_best_seller' ? 'best-seller-toggle' : undefined} />
             {label}
           </label>
         ))}
+      </div>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Quantity offer (e.g. 2)</span>
+          <input type="number" min="2" step="1" className="w-full border border-black/15 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold" value={form.bundle_qty} onChange={(e) => field('bundle_qty', e.target.value)} placeholder="Leave blank for none" />
+        </label>
+        <label className="block">
+          <span className="mb-1.5 block text-xs tracking-wide text-muted uppercase">Offer price (e.g. 900 for 2)</span>
+          <input type="number" min="0" step="1" className="w-full border border-black/15 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold" value={form.bundle_price} onChange={(e) => field('bundle_price', e.target.value)} />
+        </label>
+        <p className="sm:col-span-2 text-xs text-muted">When set, customers pay this price for that many pieces of this product. Different colours of the same product count together. The offer does not mix with a different product.</p>
       </div>
 
       <fieldset className="mt-6">

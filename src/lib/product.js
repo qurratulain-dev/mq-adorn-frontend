@@ -39,7 +39,7 @@ const COLOR_HEX = {
   Emerald: '#065F46',
   Black: '#1A1A1A',
   Maroon: '#7F1D1D',
-  Pink: '#F8E8E6',
+  Pink: '#E091A8',
   Ivory: '#FFFEF8',
   White: '#FFFFFF',
   Blue: '#1E3A8A',
@@ -49,6 +49,11 @@ const COLOR_HEX = {
   Mustard: '#C9A227',
   Sand: '#D4C4A8',
   Olive: '#6B7B4A',
+  Lavender: '#B39EB5',
+  Multicolor: '#C9A227',
+  Clear: '#F4F1EA',
+  'White/Clear': '#F4F1EA',
+  'White / Clear': '#F4F1EA',
 }
 
 export function colorHex(name) {
@@ -68,6 +73,14 @@ export function addToCartStrategy(product) {
   if (inStock.length === 0) return { type: 'oos' }
   if (inStock.length === 1) return { type: 'single', variant: inStock[0] }
   return { type: 'picker', variants: inStock }
+}
+
+export function imagesForColor(product, color) {
+  const variants = product?.variants || []
+  const variant = color ? variants.find((item) => item.color === color) : null
+  const fromVariant = (variant?.images || []).filter(Boolean)
+  if (fromVariant.length) return fromVariant
+  return (product?.images || []).filter(Boolean)
 }
 
 export function lineFromVariant(product, variant) {

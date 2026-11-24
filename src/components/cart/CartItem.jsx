@@ -43,6 +43,9 @@ export default function CartItem({ item, compact = false, onNavigate }) {
                 formatRs(item.price)
               )}
             </p>
+            {item.bundle?.applied && item.bundle?.label && (
+              <p className="mt-1 text-xs font-medium text-sale">{item.bundle.label}</p>
+            )}
             {item.price_notice && (
               <p className="mt-1 text-xs text-gold">{item.price_notice}</p>
             )}

@@ -4,6 +4,7 @@ import ShopByOccasion from '../components/ShopByOccasion.jsx'
 import OfferBanners from '../components/OfferBanners.jsx'
 import BestSellers from '../components/BestSellers.jsx'
 import DealOfTheWeek from '../components/DealOfTheWeek.jsx'
+import ShopDresses from '../components/ShopDresses.jsx'
 import Testimonials from '../components/Testimonials.jsx'
 import HomeFaq from '../components/HomeFaq.jsx'
 import Seo from '../components/Seo.jsx'
@@ -24,6 +25,7 @@ export default function Home() {
       <OfferBanners />
       <BestSellers />
       <DealOfTheWeek />
+      <ShopDresses />
       <ShopByOccasion />
       <Testimonials />
       <HomeFaq />

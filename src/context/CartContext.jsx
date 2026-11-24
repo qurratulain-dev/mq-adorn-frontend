@@ -95,6 +95,8 @@ function applyQuotes(current, quotes) {
       stock: quote.stock,
       available: quote.available,
       unavailable: nowUnavailable,
+      line_total: quote.line_total != null ? money(quote.line_total) : (unit != null ? money(unit * (item.quantity || 1)) : item.line_total),
+      bundle: quote.bundle || null,
       price_notice: nowUnavailable
         ? null
         : priceChangedOnLine
@@ -277,6 +279,7 @@ export function CartProvider({ children }) {
   const value = useMemo(() => {
     const subtotal = items.reduce((sum, item) => {
       if (item.unavailable && money(item.price) == null) return sum
+      if (item.line_total != null && item.line_total !== '') return sum + Number(item.line_total)
       return sum + Number(item.price || 0) * (item.quantity || 1)
     }, 0)
     const shippingFee = shippingFeeFor(subtotal)

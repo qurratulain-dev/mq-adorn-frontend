@@ -53,6 +53,9 @@ export default function ProductCard({ product }) {
           {product.is_new && !pricing.badge && (
             <span className="rounded-sm bg-gold px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">New</span>
           )}
+          {product.is_dummy && (product.type === 'dress' || product.type === 'dresses') && (
+            <span className="rounded-sm bg-primary/80 px-2 py-0.5 text-[10px] font-medium tracking-wide text-white uppercase">Preview</span>
+          )}
         </div>
         <button
           type="button"

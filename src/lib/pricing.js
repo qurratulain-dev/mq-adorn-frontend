@@ -38,6 +38,15 @@ export function productPricing(product, variant) {
 
   const compare = (isDeal || isSale) && current < regular ? regular : null
   const percent = compare ? salePercent(regular, current) : null
+  const bundleQty = Number(product?.bundle_qty) || 0
+  const bundlePrice = product?.bundle_price != null ? Number(product.bundle_price) : 0
+  const bundle = bundleQty >= 2 && bundlePrice > 0
+    ? {
+        qty: bundleQty,
+        price: bundlePrice,
+        label: `${bundleQty} for Rs ${Number.isInteger(bundlePrice) ? bundlePrice : bundlePrice.toLocaleString('en-PK')}`,
+      }
+    : null
 
   return {
     current,
@@ -46,6 +55,7 @@ export function productPricing(product, variant) {
     isDeal,
     isSale,
     percent,
-    badge: isDeal ? 'Deal' : isSale ? (percent ? `${percent}% Off` : 'Sale') : null,
+    bundle,
+    badge: isDeal ? 'Deal' : bundle ? bundle.label : isSale ? (percent ? `${percent}% Off` : 'Sale') : null,
   }
 }
