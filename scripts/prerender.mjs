@@ -192,6 +192,16 @@ function organizationGraph() {
   }
 }
 
+function applyVerification(html, code) {
+  const value = String(code || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 100)
+  if (!value) return html
+  const tag = `<meta name="google-site-verification" content="${value}">`
+  if (/<meta name="google-site-verification" content="[^"]*"\s*\/?>/.test(html)) {
+    return html.replace(/<meta name="google-site-verification" content="[^"]*"\s*\/?>/, tag)
+  }
+  return html.replace('<meta name="robots"', `${tag}\n    <meta name="robots"`)
+}
+
 function applyHead(template, seo) {
   const title = seo.title || DEFAULT_TITLE
   const description = seo.description || DEFAULT_DESCRIPTION
@@ -202,7 +212,7 @@ function applyHead(template, seo) {
   const robots = seo.noindex ? 'noindex, nofollow' : 'index, follow'
   const jsonLd = seo.jsonLd || organizationGraph()
 
-  let html = template
+  let html = applyVerification(template, verificationCode)
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
   html = html.replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${escapeHtml(description)}" />`)
   html = html.replace(/<meta name="robots" content="[^"]*" \/>/, `<meta name="robots" content="${robots}" />`)
@@ -298,6 +308,13 @@ async function writePage(template, seo) {
   await writeFile(target, applyHead(template, seo), 'utf8')
   console.log(`[prerender] ${seo.path}`)
 }
+
+const settingsPayload = await fetchJson('/settings')
+const verificationCode =
+  (settingsPayload && (settingsPayload.data || settingsPayload).google_site_verification) ||
+  process.env.VITE_GOOGLE_SITE_VERIFICATION ||
+  ''
+console.log(`[prerender] google-site-verification ${verificationCode ? 'present' : 'missing'}`)
 
 const template = await readFile(join(dist, 'index.html'), 'utf8')
 const faqPage = STATIC_PAGES.find((page) => page.path === '/faqs')
